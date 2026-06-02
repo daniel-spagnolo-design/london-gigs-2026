@@ -1,7 +1,8 @@
 # ── Secrets & personal data (NEVER commit) ───────────────────────────────
 keys_local.py
 Liked_Songs.csv
-liked_artists.txt   # CI fallback artist list; lives only in the LIKED_ARTISTS secret
+# CI fallback artist list; lives only in the LIKED_ARTISTS secret
+liked_artists.txt
 
 # ── Generated output / logs ──────────────────────────────────────────────
 *.log
