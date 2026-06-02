@@ -13,6 +13,9 @@ import { dirname, join } from "node:path";
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const SOURCE = join(ROOT, "london_gigs_August2026.txt");
 const OUT = join(ROOT, "index.html");
+// Committed snapshot of the gig keys from the previous build, used to count how
+// many gigs are new since the last refresh (drives the dismissable banner).
+const STATE = join(ROOT, "gigs_seen.json");
 
 // "owner/repo" on GitHub — used to deep-link the page's "Refresh gigs" button
 // to the manual-trigger page of the refresh-gigs workflow. Set this to your repo.
@@ -118,10 +121,23 @@ function renderRow(g) {
       </li>`;
 }
 
-function renderPage({ gigs, caption }) {
+function renderPage({ gigs, caption, newCount = 0 }) {
   const count = gigs.length;
   const rows = gigs.map(renderRow).join("\n");
   const year = new Date().getUTCFullYear();
+
+  // Refresh banner: how many gigs are new since the last refresh (or none).
+  // `data-build` ties a dismissal to this specific build so a later refresh
+  // (new timestamp) shows the banner again. See the inline script below.
+  const bannerMsg =
+    newCount > 0
+      ? `${newCount} new gig${newCount === 1 ? "" : "s"} found since your last refresh`
+      : "No new gigs since your last refresh";
+  const banner = `      <div class="banner banner--${newCount > 0 ? "new" : "none"}" id="refresh-banner"
+           role="status" data-build="${esc(caption)}">
+        <span class="banner__msg">${bannerMsg}</span>
+        <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
+      </div>`;
 
   return `<!doctype html>
 <html lang="en">
@@ -250,6 +266,43 @@ function renderPage({ gigs, caption }) {
       outline-offset: 2px;
     }
     .hero__refresh span { color: var(--primary); }
+
+    /* ---------- refresh banner ---------- */
+    .banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 4px;
+      padding: 14px 18px;
+      border-radius: var(--r-lg);
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .banner--new  { background: var(--primary); color: var(--ink); }
+    .banner--none { background: var(--canvas); color: var(--body); }
+    .banner__msg { min-width: 0; }
+    .banner__close {
+      flex-shrink: 0;
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 22px;
+      line-height: 1;
+      padding: 4px 9px;
+      margin: -4px -8px -4px 0;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+    .banner__close:hover { opacity: 1; background: rgba(0, 0, 0, 0.08); }
+    .banner__close:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+      opacity: 1;
+    }
 
     /* ---------- section heading ---------- */
     .section-head {
@@ -420,6 +473,7 @@ function renderPage({ gigs, caption }) {
 </head>
 <body>
   <main class="wrap">
+${banner}
     <header class="hero">
       <span class="hero__badge">Aug 2026 &middot; ${count} gig${count === 1 ? "" : "s"}</span>
       <h1 class="hero__title">
@@ -451,15 +505,56 @@ ${rows}
       london_gigs_August2026.txt &middot; &copy; ${year}</p>
     </div>
   </footer>
+
+  <script>
+    // Dismiss the refresh banner. The dismissal is remembered per build (keyed
+    // on the "Last updated" stamp), so a later refresh shows a fresh banner.
+    (function () {
+      var b = document.getElementById("refresh-banner");
+      if (!b) return;
+      var key = "lr2026-banner-dismissed:" + (b.dataset.build || "");
+      try {
+        if (localStorage.getItem(key)) { b.remove(); return; }
+      } catch (e) {}
+      b.querySelector(".banner__close").addEventListener("click", function () {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+        b.remove();
+      });
+    })();
+  </script>
 </body>
 </html>
 `;
+}
+
+// ---------- new-gig diff ----------
+
+// Compare this build's gigs against the previous build's (gigs_seen.json) and
+// return how many are new, then persist the current set for next time. A gig is
+// keyed by date+artist, matching the de-dupe key used by the checker. On the
+// first build (no state file) nothing is "new" — we just record the baseline.
+function countNewGigs(gigs) {
+  const keys = gigs.map((g) => `${g.date}|${g.artist.toLowerCase()}`).sort();
+
+  let prev = [];
+  try {
+    prev = JSON.parse(readFileSync(STATE, "utf8"));
+  } catch {
+    prev = [];
+  }
+  const firstRun = !Array.isArray(prev) || prev.length === 0;
+  const prevSet = new Set(prev);
+  const newCount = firstRun ? 0 : keys.filter((k) => !prevSet.has(k)).length;
+
+  writeFileSync(STATE, JSON.stringify(keys) + "\n", "utf8");
+  return newCount;
 }
 
 // ---------- main ----------
 
 const text = readFileSync(SOURCE, "utf8");
 const data = parseFeed(text);
+data.newCount = countNewGigs(data.gigs);
 writeFileSync(OUT, renderPage(data), "utf8");
-console.log(`Wrote ${OUT} — ${data.gigs.length} gigs.`);
+console.log(`Wrote ${OUT} — ${data.gigs.length} gigs (${data.newCount} new).`);
 for (const g of data.gigs) console.log(`  ${g.date} ${g.time}  ${g.artist}`);

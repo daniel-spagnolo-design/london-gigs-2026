@@ -126,6 +126,43 @@
     }
     .hero__refresh span { color: var(--primary); }
 
+    /* ---------- refresh banner ---------- */
+    .banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 4px;
+      padding: 14px 18px;
+      border-radius: var(--r-lg);
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .banner--new  { background: var(--primary); color: var(--ink); }
+    .banner--none { background: var(--canvas); color: var(--body); }
+    .banner__msg { min-width: 0; }
+    .banner__close {
+      flex-shrink: 0;
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 22px;
+      line-height: 1;
+      padding: 4px 9px;
+      margin: -4px -8px -4px 0;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+    .banner__close:hover { opacity: 1; background: rgba(0, 0, 0, 0.08); }
+    .banner__close:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+      opacity: 1;
+    }
+
     /* ---------- section heading ---------- */
     .section-head {
       display: flex;
@@ -295,6 +332,11 @@
 </head>
 <body>
   <main class="wrap">
+      <div class="banner banner--none" id="refresh-banner"
+           role="status" data-build="2026-06-02 06:00  (27 matches)">
+        <span class="banner__msg">No new gigs since your last refresh</span>
+        <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
+      </div>
     <header class="hero">
       <span class="hero__badge">Aug 2026 &middot; 27 gigs</span>
       <h1 class="hero__title">
@@ -784,5 +826,22 @@
       london_gigs_August2026.txt &middot; &copy; 2026</p>
     </div>
   </footer>
+
+  <script>
+    // Dismiss the refresh banner. The dismissal is remembered per build (keyed
+    // on the "Last updated" stamp), so a later refresh shows a fresh banner.
+    (function () {
+      var b = document.getElementById("refresh-banner");
+      if (!b) return;
+      var key = "lr2026-banner-dismissed:" + (b.dataset.build || "");
+      try {
+        if (localStorage.getItem(key)) { b.remove(); return; }
+      } catch (e) {}
+      b.querySelector(".banner__close").addEventListener("click", function () {
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+        b.remove();
+      });
+    })();
+  </script>
 </body>
 </html>
