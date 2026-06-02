@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>London Revisited 2026 — August gigs</title>
+  <meta name="description" content="Artists from my Spotify Liked Songs playing London in August 2026." />
+  <meta name="color-scheme" content="light" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Manrope:wght@600;700;800&display=swap" />
+  <style>
+    :root {
+      /* design.md tokens */
+      --primary: #9fe870;
+      --primary-active: #cdffad;
+      --primary-pale: #e2f6d5;
+      --canvas: #ffffff;
+      --canvas-soft: #e8ebe6;
+      --ink: #0e0f0c;
+      --ink-deep: #163300;
+      --body: #454745;
+      --mute: #868685;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-xl: 24px;
+      --r-pill: 9999px;
+      --display: "Manrope", "Inter", system-ui, sans-serif;
+      --sans: "Inter", system-ui, -apple-system, sans-serif;
+      --container: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--canvas-soft);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      font-feature-settings: "calt";
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    .wrap {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 24px 24px 0;
+    }
+
+    /* ---------- hero (dark, polarity-flipped per design.md hero-band-dark) ---------- */
+    .hero {
+      background: var(--ink);
+      color: var(--canvas);
+      border-radius: var(--r-xl);
+      padding: clamp(32px, 6vw, 72px);
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero__badge {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      padding: 6px 14px;
+      border-radius: var(--r-pill);
+      margin-bottom: clamp(20px, 4vw, 36px);
+    }
+    .hero__title {
+      font-family: var(--display);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .hero__title .l1 {
+      display: block;
+      color: var(--primary);
+      font-size: clamp(56px, 13vw, 132px);
+    }
+    .hero__title .l2 {
+      display: block;
+      color: var(--canvas);
+      font-size: clamp(24px, 5.5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-top: 0.1em;
+    }
+    .hero__sub {
+      margin: clamp(20px, 4vw, 32px) 0 0;
+      max-width: 46ch;
+      color: #d7dad4;
+      font-size: clamp(16px, 2.2vw, 20px);
+      line-height: 1.45;
+    }
+    /* quiet secondary action on the dark hero — deep-links to the GitHub
+       Actions "Run workflow" page to re-fetch gigs (see build.mjs REPO). */
+    .hero__refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(24px, 4vw, 32px);
+      padding: 11px 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: var(--r-pill);
+      color: var(--canvas);
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .hero__refresh:hover {
+      border-color: var(--primary);
+      background: rgba(159, 232, 112, 0.12);
+    }
+    .hero__refresh:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .hero__refresh span { color: var(--primary); }
+
+    /* ---------- section heading ---------- */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: clamp(40px, 7vw, 64px) 0 20px;
+    }
+    .section-head h2 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(28px, 5vw, 44px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0;
+    }
+    .section-head .caption {
+      color: var(--body);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ---------- gig list ---------- */
+    .gigs {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .gig {
+      background: var(--canvas);
+      border-radius: var(--r-xl);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 24px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .gig:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -18px rgba(14, 15, 12, 0.5);
+    }
+
+    .gig__date {
+      width: 64px;
+      flex-shrink: 0;
+      text-align: center;
+      font-family: var(--display);
+      line-height: 1;
+    }
+    .gig__day {
+      display: block;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .gig__mon {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-deep);
+      margin-top: 2px;
+    }
+
+    .gig__info { min-width: 0; }
+    .gig__event, .gig__meta { overflow-wrap: anywhere; }
+    .gig__artist {
+      font-family: var(--display);
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin: 0;
+    }
+    .gig__event {
+      margin: 4px 0 0;
+      color: var(--body);
+      font-size: 15px;
+    }
+    .gig__meta {
+      margin: 8px 0 0;
+      color: var(--body);
+      font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .gig__when { font-weight: 600; color: var(--body); }
+    .gig__dot { color: var(--mute); }
+
+    /* ---------- tickets button (button-primary) ---------- */
+    .tickets {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: var(--r-xl);
+      transition: background 0.15s ease;
+      white-space: nowrap;
+    }
+    .tickets:hover { background: var(--primary-active); }
+    .tickets span { font-size: 20px; line-height: 1; }
+    .tickets:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+    }
+    .tickets--none {
+      background: var(--canvas-soft);
+      color: var(--mute);
+      cursor: default;
+    }
+
+    /* ---------- footer ---------- */
+    footer {
+      background: var(--ink);
+      color: var(--canvas-soft);
+      margin-top: clamp(48px, 8vw, 80px);
+      padding: 48px 24px;
+    }
+    footer .wrap-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    footer strong { color: var(--primary); font-weight: 700; }
+    footer .muted { color: #8a8d86; }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 640px) {
+      .gig {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+          "date info"
+          "btn  btn";
+        gap: 16px 18px;
+      }
+      .gig__date { grid-area: date; width: 52px; }
+      .gig__day { font-size: 30px; }
+      .gig__info { grid-area: info; }
+      .tickets {
+        grid-area: btn;
+        justify-content: center;
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+      .gig:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <span class="hero__badge">Aug 2026 &middot; 27 gigs</span>
+      <h1 class="hero__title">
+        <span class="l1">London</span>
+        <span class="l2">revisited 2026</span>
+      </h1>
+      <p class="hero__sub">Artists from my Spotify Liked Songs playing London this August. Tap through to grab a ticket.</p>
+      <a class="hero__refresh" href="https://github.com/YOUR-GITHUB-USERNAME/london-gigs-2026/actions/workflows/refresh-gigs.yml" target="_blank" rel="noopener"
+         aria-label="Refresh gigs — opens the GitHub Actions run page">
+        Refresh gigs <span aria-hidden="true">&rsaquo;</span>
+      </a>
+    </header>
+
+    <section aria-labelledby="gigs-heading">
+      <div class="section-head">
+        <h2 id="gigs-heading">Aug 2026 gigs</h2>
+        <p class="caption">Last updated 2026-06-02 11:35  (27 matches — 27 confirmed, 0 to verify)</p>
+      </div>
+      <ul class="gigs">
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">1</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">TDJ</h3>
+          <p class="gig__event">Boiler Room: London - Saturday</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 1 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Burgess Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2383383" target="_blank" rel="noopener"
+           aria-label="Buy tickets for TDJ">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">1</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">nimino</h3>
+          <p class="gig__event">berlioz presents deep in it</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 1 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Finsbury Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2315331" target="_blank" rel="noopener"
+           aria-label="Buy tickets for nimino">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">1</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">RY X</h3>
+          <p class="gig__event">Innervisions LONDON</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 1 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Boston Manor Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2373267" target="_blank" rel="noopener"
+           aria-label="Buy tickets for RY X">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">1</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Vegyn</h3>
+          <p class="gig__event">berlioz presents deep in it</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 1 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Finsbury Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2315331" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Vegyn">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">7</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Pretty Girl</h3>
+          <p class="gig__event">krankbrother presents: Sammy Virji</p>
+          <p class="gig__meta">
+            <span class="gig__when">Fri 7 Aug &middot; 1:30pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Finsbury Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2307748" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Pretty Girl">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">7</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Erika de Casier</h3>
+          <p class="gig__event">Overmono present Pure Devotion at Old Royal Naval College</p>
+          <p class="gig__meta">
+            <span class="gig__when">Fri 7 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Old Royal Naval College</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2350409" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Erika de Casier">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">7</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Session Victim</h3>
+          <p class="gig__event">Palais: Session Victim (Extended Set)</p>
+          <p class="gig__meta">
+            <span class="gig__when">Fri 7 Aug &middot; 10pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Palais</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2431588" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Session Victim">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">8</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Skin On Skin</h3>
+          <p class="gig__event">Maiden Voyage Festival 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 8 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Burgess Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2236226" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Skin On Skin">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">8</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Four Tet</h3>
+          <p class="gig__event">krankbrother presents: Four Tet All Dayer</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 8 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Finsbury Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2323058" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Four Tet">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">8</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">CC:DISCO!</h3>
+          <p class="gig__event">Night Tales: CC:DISCO! &amp; Bárbara Boeing</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 8 Aug &middot; 3pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Night Tales</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2440896" target="_blank" rel="noopener"
+           aria-label="Buy tickets for CC:DISCO!">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">9</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Groove Armada</h3>
+          <p class="gig__event">Eastern Electrics 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 9 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Burgess Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2352117" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Groove Armada">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">9</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Skream</h3>
+          <p class="gig__event">Eastern Electrics 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 9 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Burgess Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2352117" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Skream">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">9</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Adam Port</h3>
+          <p class="gig__event">krankbrother presents: Adam Port + &amp;ME</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 9 Aug &middot; 1:30pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Finsbury Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2315321" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Adam Port">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">22</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Skream</h3>
+          <p class="gig__event">Hifields 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 22 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Dullingham Polo Club</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2443971" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Skream">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">22</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Fabiana Palladino</h3>
+          <p class="gig__event">All Points East - Lorde</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 22 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Victoria Park London</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketmaster.co.uk/all-points-east-lorde-london-22-08-2026/event/37006364B4B15CA1" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Fabiana Palladino">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">22</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Oklou</h3>
+          <p class="gig__event">All Points East - Lorde</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 22 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Victoria Park London</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketmaster.co.uk/all-points-east-lorde-london-22-08-2026/event/37006364B4B15CA1" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Oklou">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">22</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Flight Facilities</h3>
+          <p class="gig__event">Purple Disco Machine with Flight Facilities, Jayda G, david bay</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 22 Aug &middot; 2:30pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Magazine Open–Air</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2373989" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Flight Facilities">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Blood Orange</h3>
+          <p class="gig__event">RALLY 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Southwark Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2298367" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Blood Orange">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Crazy P</h3>
+          <p class="gig__event">Appetite On The Farm 2026 - Bank Holiday</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Kelvedon Hall</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Crazy P">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Roman Flügel</h3>
+          <p class="gig__event">RALLY 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Southwark Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2298367" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Roman Flügel">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">SG Lewis</h3>
+          <p class="gig__event">Appetite On The Farm 2026 - Bank Holiday</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Kelvedon Hall</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
+           aria-label="Buy tickets for SG Lewis">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Skream</h3>
+          <p class="gig__event">Appetite On The Farm 2026 - Bank Holiday</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Kelvedon Hall</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Skream">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">29</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Todd Edwards</h3>
+          <p class="gig__event">Appetite On The Farm 2026 - Bank Holiday</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Kelvedon Hall</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Todd Edwards">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">30</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Eric Luttrell</h3>
+          <p class="gig__event">Eric Luttrell - Summer Of Love Tour 2026 - London</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 30 Aug &middot; 3pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Riverside East</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.universe.com/events/eric-luttrell-summer-of-love-tour-2026-london-tickets-L367MT?ref=ticketmaster" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Eric Luttrell">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">31</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Folamour</h3>
+          <p class="gig__event">LIDO – Maribou State</p>
+          <p class="gig__meta">
+            <span class="gig__when">Mon 31 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Victoria Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://dice.fm/event/av79ld-lido-maribou-state-31st-aug-victoria-park-london-tickets" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Folamour">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">31</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Maribou State</h3>
+          <p class="gig__event">LIDO Festival - Maribou State</p>
+          <p class="gig__meta">
+            <span class="gig__when">Mon 31 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Victoria Park London</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketmaster.co.uk/lido-festival-maribou-state-london-31-08-2026/event/3700634F8FB736F0" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Maribou State">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">31</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Earl Sweatshirt</h3>
+          <p class="gig__event">Earl Sweatshirt &amp; MIKE - Home on the Range Tour 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Mon 31 Aug &middot; 7pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">O2 Forum Kentish Town</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketmaster.co.uk/earl-sweatshirt-mike-home-on-the-london-31-08-2026/event/3E006466F3688E5B" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Earl Sweatshirt">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap-inner">
+      <p><strong>London Revisited 2026</strong></p>
+      <p class="muted">Sources: Ticketmaster + Resident Advisor + DICE (confirmed) + Skiddle (verify). Built from
+      london_gigs_August2026.txt &middot; &copy; 2026</p>
+    </div>
+  </footer>
+</body>
+</html>
