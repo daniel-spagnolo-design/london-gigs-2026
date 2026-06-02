@@ -357,7 +357,7 @@
 <body>
   <main class="wrap">
       <div class="banner banner--none" id="refresh-banner"
-           role="status" data-build="2026-06-02 06:15  (27 matches)">
+           role="status" data-build="2026-06-02T06:15:00Z">
         <span class="banner__msg">No new gigs since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
@@ -377,7 +377,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated 2026-06-02 06:15  (27 matches)</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-02T06:15:00Z">Tuesday Jun 2nd 2026, 6:15am</time> &middot; 27 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -850,6 +850,27 @@
       london_gigs_August2026.txt &middot; &copy; 2026</p>
     </div>
   </footer>
+
+  <script>
+    // Re-render "Last updated" in the viewer's own timezone. The page is built
+    // on a UTC server, so the embedded <time> is UTC; here we localise it to
+    // wherever the reader is (home now, London in August) and match their clock.
+    (function () {
+      var el = document.getElementById("updated-time");
+      if (!el) return;
+      var d = new Date(el.getAttribute("datetime"));
+      if (isNaN(d.getTime())) return;
+      var weekday = d.toLocaleDateString("en-GB", { weekday: "long" });
+      var month = d.toLocaleDateString("en-GB", { month: "short" });
+      var day = d.getDate();
+      var v = day % 100, s = ["th", "st", "nd", "rd"];
+      var ord = s[(v - 20) % 10] || s[v] || "th";
+      var hr = d.getHours(), min = d.getMinutes();
+      var suffix = hr < 12 ? "am" : "pm", h12 = hr % 12 === 0 ? 12 : hr % 12;
+      var time = min === 0 ? h12 + suffix : h12 + ":" + String(min).padStart(2, "0") + suffix;
+      el.textContent = weekday + " " + month + " " + day + ord + " " + d.getFullYear() + ", " + time;
+    })();
+  </script>
 
   <script>
     // Dismiss the refresh banner. The dismissal is remembered per build (keyed

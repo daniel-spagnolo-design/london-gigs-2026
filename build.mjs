@@ -27,9 +27,14 @@ const REFRESH_URL = `https://github.com/${REPO}/actions/workflows/refresh-gigs.y
 function parseFeed(text) {
   const lines = text.split(/\r?\n/);
 
-  // Caption: pull the "Last updated: ... (N matches ...)" line if present.
+  // "Last updated" is written by the checker as YYYY-MM-DD HH:MM in UTC (it runs
+  // on a UTC server). Capture it as an explicit UTC instant (…Z) so the browser
+  // can re-render it in the viewer's own timezone. See the inline script.
   const updatedLine = lines.find((l) => /^Last updated:/i.test(l)) || "";
-  const caption = updatedLine.replace(/^Last updated:\s*/i, "").trim();
+  const um = updatedLine.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/);
+  const updatedIso = um
+    ? `${um[1]}-${um[2]}-${um[3]}T${um[4]}:${um[5]}:00Z`
+    : new Date().toISOString();
 
   // Everything after the === rule is gig blocks separated by --- dividers.
   const body = text.split(/^=+\s*$/m).pop() || text;
@@ -64,7 +69,7 @@ function parseFeed(text) {
   }
 
   gigs.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-  return { gigs, caption };
+  return { gigs, updatedIso };
 }
 
 // ---------- format ----------
@@ -94,6 +99,26 @@ const esc = (s = "") =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]),
   );
 
+const ordinal = (n) => {
+  const v = n % 100;
+  return ["th", "st", "nd", "rd"][(v - 20) % 10] || ["th", "st", "nd", "rd"][v] || "th";
+};
+
+// Server-rendered fallback for "Last updated", e.g. "Tuesday Jun 2nd 2026, 4:15pm".
+// Rendered in UTC; the inline script re-renders it in the viewer's timezone.
+function formatUpdatedUTC(iso) {
+  const d = new Date(iso);
+  const weekday = d.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
+  const month = d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" });
+  const day = d.getUTCDate();
+  const hr = d.getUTCHours();
+  const min = d.getUTCMinutes();
+  const suffix = hr < 12 ? "am" : "pm";
+  const h12 = hr % 12 === 0 ? 12 : hr % 12;
+  const time = min === 0 ? `${h12}${suffix}` : `${h12}:${String(min).padStart(2, "0")}${suffix}`;
+  return `${weekday} ${month} ${day}${ordinal(day)} ${d.getUTCFullYear()}, ${time}`;
+}
+
 // ---------- render ----------
 
 function renderRow(g) {
@@ -121,10 +146,11 @@ function renderRow(g) {
       </li>`;
 }
 
-function renderPage({ gigs, caption, newCount = 0 }) {
+function renderPage({ gigs, updatedIso, newCount = 0 }) {
   const count = gigs.length;
   const rows = gigs.map(renderRow).join("\n");
   const year = new Date().getUTCFullYear();
+  const updatedFallback = formatUpdatedUTC(updatedIso);
 
   // Refresh banner: how many gigs are new since the last refresh (or none).
   // `data-build` ties a dismissal to this specific build so a later refresh
@@ -134,7 +160,7 @@ function renderPage({ gigs, caption, newCount = 0 }) {
       ? `${newCount} new gig${newCount === 1 ? "" : "s"} found since your last refresh`
       : "No new gigs since your last refresh";
   const banner = `      <div class="banner banner--${newCount > 0 ? "new" : "none"}" id="refresh-banner"
-           role="status" data-build="${esc(caption)}">
+           role="status" data-build="${updatedIso}">
         <span class="banner__msg">${bannerMsg}</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>`;
@@ -514,7 +540,7 @@ ${banner}
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        ${caption ? `<p class="caption">Last updated ${esc(caption)}</p>` : ""}
+        <p class="caption">Last updated <time id="updated-time" datetime="${updatedIso}">${esc(updatedFallback)}</time> &middot; ${count} match${count === 1 ? "" : "es"}</p>
       </div>
       <ul class="gigs">
 ${rows}
@@ -529,6 +555,27 @@ ${rows}
       london_gigs_August2026.txt &middot; &copy; ${year}</p>
     </div>
   </footer>
+
+  <script>
+    // Re-render "Last updated" in the viewer's own timezone. The page is built
+    // on a UTC server, so the embedded <time> is UTC; here we localise it to
+    // wherever the reader is (home now, London in August) and match their clock.
+    (function () {
+      var el = document.getElementById("updated-time");
+      if (!el) return;
+      var d = new Date(el.getAttribute("datetime"));
+      if (isNaN(d.getTime())) return;
+      var weekday = d.toLocaleDateString("en-GB", { weekday: "long" });
+      var month = d.toLocaleDateString("en-GB", { month: "short" });
+      var day = d.getDate();
+      var v = day % 100, s = ["th", "st", "nd", "rd"];
+      var ord = s[(v - 20) % 10] || s[v] || "th";
+      var hr = d.getHours(), min = d.getMinutes();
+      var suffix = hr < 12 ? "am" : "pm", h12 = hr % 12 === 0 ? 12 : hr % 12;
+      var time = min === 0 ? h12 + suffix : h12 + ":" + String(min).padStart(2, "0") + suffix;
+      el.textContent = weekday + " " + month + " " + day + ord + " " + d.getFullYear() + ", " + time;
+    })();
+  </script>
 
   <script>
     // Dismiss the refresh banner. The dismissal is remembered per build (keyed
