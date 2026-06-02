@@ -16,7 +16,7 @@ const OUT = join(ROOT, "index.html");
 
 // "owner/repo" on GitHub — used to deep-link the page's "Refresh gigs" button
 // to the manual-trigger page of the refresh-gigs workflow. Set this to your repo.
-const REPO = "YOUR-GITHUB-USERNAME/london-gigs-2026";
+const REPO = "daniel-spagnolo-design/london-gigs-2026";
 const REFRESH_URL = `https://github.com/${REPO}/actions/workflows/refresh-gigs.yml`;
 
 // ---------- parse ----------
