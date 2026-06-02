@@ -447,7 +447,7 @@ ${rows}
   <footer>
     <div class="wrap-inner">
       <p><strong>London Revisited 2026</strong></p>
-      <p class="muted">Sources: Ticketmaster + Resident Advisor + DICE (confirmed) + Skiddle (verify). Built from
+      <p class="muted">Sources: Ticketmaster + Resident Advisor + DICE. Built from
       london_gigs_August2026.txt &middot; &copy; ${year}</p>
     </div>
   </footer>

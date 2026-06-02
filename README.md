@@ -3,12 +3,11 @@
 Finds artists from my Spotify **Liked Songs** who are playing **London in August 2026**,
 and turns the results into a clean, single-page site.
 
-It cross-references four gig sources and matches them against my liked artists:
+It cross-references three gig sources and matches them against my liked artists:
 
 - **Ticketmaster** Discovery API — structured lineups (confirmed)
 - **Resident Advisor** (ra.co internal GraphQL) — structured lineups (confirmed)
 - **DICE** (api.dice.fm internal endpoint) — structured lineups (confirmed)
-- **Skiddle** API — free-text title matching (verify)
 
 Results are merged, de-duplicated per artist+date, written to
 `london_gigs_August2026.txt`, and rendered into `index.html` by `build.mjs`.
@@ -18,7 +17,7 @@ Results are merged, de-duplicated per artist+date, written to
 This repo is public, so secrets and personal data are **not** committed. To run it
 yourself you need to supply two things locally:
 
-1. **API keys** — copy the template and fill in your own keys:
+1. **API key** — copy the template and fill in your own Ticketmaster key:
    ```sh
    cp keys_local.example.py keys_local.py   # then edit keys_local.py
    ```
@@ -53,8 +52,8 @@ mobile browser. A GitHub Actions workflow lets you re-fetch gigs remotely.
 3. **Settings → Pages → Source: Deploy from a branch → `main` / root.** After a
    minute the URL appears: `https://<your-username>.github.io/london-gigs-2026/`.
    That's the link you open on your phone.
-4. **Settings → Secrets and variables → Actions** → add three secrets:
-   - `TM_API_KEY` and `SKIDDLE_API_KEY` — your keys from `keys_local.py`.
+4. **Settings → Secrets and variables → Actions** → add two secrets:
+   - `TM_API_KEY` — your Ticketmaster key from `keys_local.py`.
    - `LIKED_ARTISTS` — your artist names, one per line. Generate the exact text with:
      ```sh
      python3 -c "import csv;a=set();[a.update(x.strip() for x in r['Artist Name(s)'].split(';')) for r in csv.DictReader(open('Liked_Songs.csv',encoding='utf-8-sig'))];a.discard('');print('\n'.join(sorted(a)))"

@@ -4,10 +4,9 @@ name: Refresh gigs
 # commits the result so GitHub Pages redeploys. Trigger it by tapping
 # "Run workflow" below (works from a phone browser), or let the weekly cron run.
 #
-# Requires three repository secrets (Settings -> Secrets and variables -> Actions):
-#   TM_API_KEY       Ticketmaster Discovery API key
-#   SKIDDLE_API_KEY  Skiddle API key
-#   LIKED_ARTISTS    newline-separated list of your liked artist names
+# Requires two repository secrets (Settings -> Secrets and variables -> Actions):
+#   TM_API_KEY     Ticketmaster Discovery API key
+#   LIKED_ARTISTS  newline-separated list of your liked artist names
 on:
   workflow_dispatch:
   schedule:
@@ -44,15 +43,11 @@ jobs:
       - name: Provide secrets to the checker
         env:
           TM_API_KEY: ${{ secrets.TM_API_KEY }}
-          SKIDDLE_API_KEY: ${{ secrets.SKIDDLE_API_KEY }}
           LIKED_ARTISTS: ${{ secrets.LIKED_ARTISTS }}
         run: |
           # keys_local.py is what the checker imports; recreate it from secrets.
           # (It's git-ignored, so it never gets committed.)
-          {
-            printf 'TM_API_KEY      = "%s"\n' "$TM_API_KEY"
-            printf 'SKIDDLE_API_KEY = "%s"\n' "$SKIDDLE_API_KEY"
-          } > keys_local.py
+          printf 'TM_API_KEY = "%s"\n' "$TM_API_KEY" > keys_local.py
           # The full Liked_Songs.csv is private; supply the compact name list.
           printf '%s\n' "$LIKED_ARTISTS" > liked_artists.txt
 

@@ -2,14 +2,14 @@
 London Gigs Checker
 -------------------
 Finds live-music events in London (August 2026) that match artists from your
-Spotify Liked Songs CSV. Cross-references two sources:
+Spotify Liked Songs CSV. Cross-references three sources, all with structured
+artist lineups ("confirmed" matches):
 
-  * Ticketmaster Discovery API — structured performer data ("confirmed" matches)
-  * Skiddle API (UK-native: gigs, club nights, festivals) — matched by artist
-    name appearing in the event title/description ("verify" matches, since
-    Skiddle exposes no structured lineup field)
+  * Ticketmaster Discovery API — structured performer data
+  * Resident Advisor (ra.co internal GraphQL) — structured lineups
+  * DICE (api.dice.fm internal endpoint) — structured lineups
 
-Results from both sources are merged and de-duplicated (same artist + same date).
+Results from all sources are merged and de-duplicated (same artist + same date).
 
 Usage:
     python3 london_gigs_checker.py
@@ -31,11 +31,11 @@ from datetime import datetime, date
 # API keys live in keys_local.py (git-ignored) so they never reach the public
 # repo. Copy keys_local.example.py -> keys_local.py and fill in your keys.
 try:
-    from keys_local import TM_API_KEY, SKIDDLE_API_KEY
+    from keys_local import TM_API_KEY
 except ImportError as exc:
     raise SystemExit(
         "Missing keys_local.py — run `cp keys_local.example.py keys_local.py` "
-        "and add your Ticketmaster + Skiddle API keys."
+        "and add your Ticketmaster API key."
     ) from exc
 
 CSV_PATH        = Path(__file__).parent / "Liked_Songs.csv"
@@ -47,19 +47,17 @@ OUTPUT_PATH     = Path(__file__).parent / "london_gigs_August2026.txt"
 
 START_DATE      = "2026-08-01T00:00:00Z"
 END_DATE        = "2026-08-31T23:59:59Z"
-SKIDDLE_MIN     = "2026-08-01"
-SKIDDLE_MAX     = "2026-08-31"
+WINDOW_MIN      = "2026-08-01"   # shared date window for the RA + DICE fetchers
+WINDOW_MAX      = "2026-08-31"
 
-# London centre; radius in miles covers Greater London venues
+# London centre; used by the DICE fetcher's geo search
 LONDON_LAT      = 51.5074
 LONDON_LON      = -0.1278
-SKIDDLE_RADIUS  = 15
-SKIDDLE_CODES   = ["LIVE", "CLUB", "FEST"]   # music event types
 
 # Resident Advisor + DICE have no public API, so we call the same internal
 # endpoints their own websites use. Both expose exact, structured artist
-# lineups, so matching mirrors the high-precision Ticketmaster path (not the
-# fuzzy Skiddle one). These are undocumented and may change without notice.
+# lineups, so matching mirrors the high-precision Ticketmaster path. These are
+# undocumented and may change without notice.
 USER_AGENT      = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36")
 RA_AREA_LONDON  = 13     # ra.co area id for London
@@ -67,11 +65,11 @@ RA_PAGE_SIZE    = 20
 DICE_TAGS       = ["music:gig", "music:dj", "music:party"]
 
 PAGE_SIZE       = 200    # Ticketmaster
-SKIDDLE_PAGE    = 100    # Skiddle max per page
 RATE_LIMIT_S    = 0.25
 
-# Skiddle is matched against free-text titles, so guard against false positives:
-# skip artist names shorter than this, plus common words that double as names.
+# DICE's title pre-filter matches against free-text titles, so guard against
+# false positives: skip artist names shorter than this, plus common words that
+# double as names.
 MIN_FUZZY_LEN   = 4
 STOPWORD_NAMES  = {
     "yes", "war", "girl", "girls", "boy", "boys", "mess", "air", "hot", "cream",
@@ -204,41 +202,7 @@ def match_ticketmaster(events: list[dict], liked_artists: set[str]) -> list[dict
     return matches
 
 
-# ── Skiddle ───────────────────────────────────────────────────────────────────
-def fetch_skiddle(api_key: str) -> list[dict]:
-    base = "https://www.skiddle.com/api/v1/events/search/"
-    all_events = []
-    for code in SKIDDLE_CODES:
-        offset = 0
-        while True:
-            params = {
-                "api_key":   api_key,
-                "latitude":  LONDON_LAT,
-                "longitude": LONDON_LON,
-                "radius":    SKIDDLE_RADIUS,
-                "eventcode": code,
-                "minDate":   SKIDDLE_MIN,
-                "maxDate":   SKIDDLE_MAX,
-                "limit":     SKIDDLE_PAGE,
-                "offset":    offset,
-                "order":     "date",
-                "description": 1,
-            }
-            r = requests.get(base, params=params, timeout=15)
-            r.raise_for_status()
-            data  = r.json()
-            total = int(data.get("totalcount", 0))
-            chunk = data.get("results", [])
-            all_events.extend(chunk)
-            print(f"  [Skiddle] {code}  offset {offset}  ({len(chunk)} of {total})")
-
-            offset += SKIDDLE_PAGE
-            if offset >= total or not chunk:
-                break
-            time.sleep(RATE_LIMIT_S)
-    return all_events
-
-
+# ── Fuzzy title matcher (used by the DICE pre-filter) ─────────────────────────
 def _alternation_regex(names: list[str]):
     if not names:
         return None
@@ -265,44 +229,6 @@ def build_fuzzy_matcher(liked_artists: set[str]):
             multiword.append(name)
     lookup = {n: n for n in safe}
     return _alternation_regex(safe), _alternation_regex(multiword), lookup
-
-
-def match_skiddle(events: list[dict], liked_artists: set[str]) -> list[dict]:
-    """Match artist names appearing in the event title/description. Lower
-    confidence (no structured lineup field), so flagged for the user to verify."""
-    title_regex, desc_regex, lookup = build_fuzzy_matcher(liked_artists)
-    if title_regex is None:
-        return []
-
-    matches = []
-    for event in events:
-        name = event.get("eventname", "") or ""
-        desc = event.get("description", "") or ""
-
-        hits = {m.group(1).lower() for m in title_regex.finditer(name)}
-        if desc_regex is not None:
-            hits |= {m.group(1).lower() for m in desc_regex.finditer(desc)}
-        if not hits:
-            continue
-
-        venue   = (event.get("venue") or {}).get("name", "")
-        d       = event.get("date", "")
-        start   = event.get("startdate", "") or ""
-        t       = start[11:16] if len(start) >= 16 else ""
-        url     = event.get("link", "")
-
-        for h in hits:
-            matches.append({
-                "artist":     lookup[h],   # canonical lowercased name
-                "event":      name,
-                "date":       d,
-                "time":       t,
-                "venue":      venue,
-                "url":        url,
-                "source":     "Skiddle",
-                "confidence": "verify",
-            })
-    return matches
 
 
 # ── Resident Advisor (ra.co GraphQL) ──────────────────────────────────────────
@@ -333,7 +259,7 @@ def fetch_resident_advisor() -> list[dict]:
             "variables": {
                 "filters": {
                     "areas":       {"eq": RA_AREA_LONDON},
-                    "listingDate": {"gte": SKIDDLE_MIN, "lte": SKIDDLE_MAX},
+                    "listingDate": {"gte": WINDOW_MIN, "lte": WINDOW_MAX},
                 },
                 "filterOptions": {"genre": True, "eventType": True},
                 "pageSize": RA_PAGE_SIZE,
@@ -404,7 +330,7 @@ def fetch_dice() -> list[dict]:
                 "tag":   tag,
                 "lat":   LONDON_LAT,
                 "lng":   LONDON_LON,
-                "dates": {"from": SKIDDLE_MIN, "to": SKIDDLE_MAX},
+                "dates": {"from": WINDOW_MIN, "to": WINDOW_MAX},
             }
             if cursor:
                 payload["cursor"] = cursor
@@ -489,31 +415,24 @@ def match_dice(events: list[dict], liked_artists: set[str]) -> list[dict]:
 
 # ── Merge / output ────────────────────────────────────────────────────────────
 def merge_dedupe(*match_lists: list[dict]) -> list[dict]:
-    """One entry per (artist, date). Prefer a confirmed (Ticketmaster) match
-    over a verify (Skiddle) one when both exist for the same artist+date."""
+    """One entry per (artist, date) across all sources (first match wins)."""
     best: dict[tuple, dict] = {}
     for m in [x for lst in match_lists for x in lst]:
         key = (m["artist"].lower(), m["date"])
-        cur = best.get(key)
-        if cur is None:
+        if key not in best:
             best[key] = m
-        elif cur["confidence"] == "verify" and m["confidence"] == "confirmed":
-            best[key] = m   # upgrade to the structured match
     out = list(best.values())
     out.sort(key=lambda x: (x["date"], x["artist"].lower()))
     return out
 
 
 def write_results(matches: list[dict], output_path: Path) -> None:
-    confirmed = sum(1 for m in matches if m["confidence"] == "confirmed")
-    verify    = len(matches) - confirmed
-
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("LONDON GIGS — AUGUST 2026\n")
         f.write("Artists from your Spotify Liked Songs playing in London\n")
-        f.write("Sources: Ticketmaster + Resident Advisor + DICE (confirmed) + Skiddle (verify)\n")
+        f.write("Sources: Ticketmaster + Resident Advisor + DICE (confirmed)\n")
         f.write(f"Last updated: {datetime.now():%Y-%m-%d %H:%M}  "
-                f"({len(matches)} matches — {confirmed} confirmed, {verify} to verify)\n")
+                f"({len(matches)} matches)\n")
         f.write("=" * 60 + "\n\n")
 
         if not matches:
@@ -521,8 +440,7 @@ def write_results(matches: list[dict], output_path: Path) -> None:
             return
 
         for m in matches:
-            tag = "" if m["confidence"] == "confirmed" else "  [verify — name match]"
-            f.write(f"{m['date']}  {m['time']}{tag}\n")
+            f.write(f"{m['date']}  {m['time']}\n")
             f.write(f"Artist : {m['artist']}\n")
             f.write(f"Event  : {m['event']}\n")
             f.write(f"Venue  : {m['venue']}\n")
@@ -549,17 +467,13 @@ def main():
     tm_events = fetch_ticketmaster(TM_API_KEY)
     print(f"  Ticketmaster events: {len(tm_events)}\n")
 
-    print("Fetching Skiddle (Aug 2026)...")
-    sk_events = fetch_skiddle(SKIDDLE_API_KEY)
-    print(f"  Skiddle events: {len(sk_events)}\n")
-
     print("Fetching Resident Advisor (Aug 2026)...")
     ra_events = fetch_resident_advisor()
     print(f"  Resident Advisor events: {len(ra_events)}\n")
 
     # DICE uses an undocumented internal endpoint that can change without notice.
     # Per the "strict" choice: on any failure, surface it loudly and log it, but
-    # still build the page from the other three sources rather than crashing.
+    # still build the page from the other sources (TM + RA) rather than crashing.
     print("Fetching DICE (Aug 2026)...")
     dice_events: list[dict] = []
     dice_failed = False
@@ -576,7 +490,6 @@ def main():
 
     print("Cross-referencing with liked artists...")
     tm_matches = match_ticketmaster(tm_events, liked_artists)
-    sk_matches = match_skiddle(sk_events, liked_artists)
     ra_matches = match_resident_advisor(ra_events, liked_artists)
     dice_matches: list[dict] = []
     if not dice_failed:
@@ -588,16 +501,14 @@ def main():
             print("⚠️  DICE MATCHING FAILED — the other sources will still be used.")
             print(f"    {type(exc).__name__}: {exc}")
             print("!" * 60 + "\n")
-    matches = merge_dedupe(tm_matches, sk_matches, ra_matches, dice_matches)
+    matches = merge_dedupe(tm_matches, ra_matches, dice_matches)
 
-    confirmed = sum(1 for m in matches if m["confidence"] == "confirmed")
-    print(f"  Matches: {len(matches)}  ({confirmed} confirmed, {len(matches) - confirmed} to verify)\n")
+    print(f"  Matches: {len(matches)}\n")
 
     if matches:
         print("─" * 60)
         for m in matches:
-            tag = "" if m["confidence"] == "confirmed" else "  [verify]"
-            print(f"  {m['date']} {m['time']:5}  {m['artist']}{tag}")
+            print(f"  {m['date']} {m['time']:5}  {m['artist']}")
             print(f"               {m['venue']}  ({m['source']})")
             print(f"               {m['url']}")
             print()
@@ -606,13 +517,13 @@ def main():
 
     write_results(matches, OUTPUT_PATH)
 
-    total_events = len(tm_events) + len(sk_events) + len(ra_events) + len(dice_events)
+    total_events = len(tm_events) + len(ra_events) + len(dice_events)
     dice_note = "DICE FAILED" if dice_failed else f"DICE {len(dice_events)}"
     log_path = Path(__file__).parent / "run_log.txt"
     with open(log_path, "a", encoding="utf-8") as f:
         status = "ran with DICE failure" if dice_failed else "ran OK"
         f.write(f"{datetime.now():%Y-%m-%d %H:%M}  {status} — {total_events} events scanned "
-                f"(TM {len(tm_events)} + Skiddle {len(sk_events)} + RA {len(ra_events)} + "
+                f"(TM {len(tm_events)} + RA {len(ra_events)} + "
                 f"{dice_note}), {len(matches)} matches\n")
 
 
