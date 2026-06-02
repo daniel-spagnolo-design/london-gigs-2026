@@ -136,11 +136,35 @@
       padding: 14px 18px;
       border-radius: var(--r-lg);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
+      box-shadow: 0 10px 24px -20px rgba(14, 15, 12, 0.6);
     }
-    .banner--new  { background: var(--primary); color: var(--ink); }
-    .banner--none { background: var(--canvas); color: var(--body); }
-    .banner__msg { min-width: 0; }
+    .banner--new {
+      background: var(--primary);
+      color: var(--ink);
+    }
+    .banner--none {
+      background: var(--canvas);
+      color: var(--ink);
+      border: 1.5px solid #c5ccc0;
+      border-left: 5px solid var(--ink-deep);
+    }
+    .banner__msg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    /* status dot so the bar clearly reads as a banner at a glance */
+    .banner__msg::before {
+      content: "";
+      flex-shrink: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+    .banner--none .banner__msg::before { background: var(--ink-deep); }
     .banner__close {
       flex-shrink: 0;
       appearance: none;
