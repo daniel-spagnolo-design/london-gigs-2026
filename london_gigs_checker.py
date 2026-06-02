@@ -44,6 +44,10 @@ CSV_PATH        = Path(__file__).parent / "Liked_Songs.csv"
 # of the full personal Liked_Songs.csv. See load_liked_artists().
 ARTISTS_TXT     = Path(__file__).parent / "liked_artists.txt"
 OUTPUT_PATH     = Path(__file__).parent / "london_gigs_August2026.txt"
+# Run logs live in logs/ (git-ignored). Ensure the folder exists so appends
+# don't fail on a fresh checkout.
+LOG_PATH        = Path(__file__).parent / "logs" / "run_log.txt"
+LOG_PATH.parent.mkdir(exist_ok=True)
 
 START_DATE      = "2026-08-01T00:00:00Z"
 END_DATE        = "2026-08-31T23:59:59Z"
@@ -453,8 +457,7 @@ def write_results(matches: list[dict], output_path: Path) -> None:
 
 def main():
     if date.today() > CUTOFF_DATE:
-        log_path = Path(__file__).parent / "run_log.txt"
-        with open(log_path, "a", encoding="utf-8") as f:
+        with open(LOG_PATH, "a", encoding="utf-8") as f:
             f.write(f"{datetime.now():%Y-%m-%d %H:%M}  past cutoff — retiring weekly job, no update\n")
         retire_schedule()
         return
@@ -519,8 +522,7 @@ def main():
 
     total_events = len(tm_events) + len(ra_events) + len(dice_events)
     dice_note = "DICE FAILED" if dice_failed else f"DICE {len(dice_events)}"
-    log_path = Path(__file__).parent / "run_log.txt"
-    with open(log_path, "a", encoding="utf-8") as f:
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
         status = "ran with DICE failure" if dice_failed else "ran OK"
         f.write(f"{datetime.now():%Y-%m-%d %H:%M}  {status} — {total_events} events scanned "
                 f"(TM {len(tm_events)} + RA {len(ra_events)} + "

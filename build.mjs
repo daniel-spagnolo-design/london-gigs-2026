@@ -2,8 +2,8 @@
 // Generates index.html from london_gigs_August2026.txt
 // Run: node build.mjs
 //
-// Visual system follows design.md (Wise-style: lime CTA, sage canvas, ink text,
-// 24px pill radius, weight-900 display). Personality per PRODUCT.md: bold &
+// Visual system follows docs/design.md (Wise-style: lime CTA, sage canvas, ink text,
+// 24px pill radius, weight-900 display). Personality per docs/PRODUCT.md: bold &
 // energetic within that palette — big type, a dark hero, one loud lime accent.
 
 import { readFileSync, writeFileSync } from "node:fs";
@@ -173,13 +173,17 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
   <title>London Revisited 2026 — August gigs</title>
   <meta name="description" content="Artists from my Spotify Liked Songs playing London in August 2026." />
   <meta name="color-scheme" content="light" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" href="apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="London Gigs" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Manrope:wght@600;700;800&display=swap" />
   <style>
     :root {
-      /* design.md tokens */
+      /* docs/design.md tokens */
       --primary: #9fe870;
       --primary-active: #cdffad;
       --primary-pale: #e2f6d5;
@@ -218,7 +222,7 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       padding: 24px 24px 0;
     }
 
-    /* ---------- hero (dark, polarity-flipped per design.md hero-band-dark) ---------- */
+    /* ---------- hero (dark, polarity-flipped per docs/design.md hero-band-dark) ---------- */
     .hero {
       background: var(--ink);
       color: var(--canvas);

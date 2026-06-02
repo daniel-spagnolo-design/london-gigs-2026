@@ -5,8 +5,8 @@ Liked_Songs.csv
 liked_artists.txt
 
 # ── Generated output / logs ──────────────────────────────────────────────
+logs/
 *.log
-run_log.txt
 
 # ── AI-tool / editor skill folders (not part of the project) ─────────────
 .kiro/
