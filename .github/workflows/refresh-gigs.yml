@@ -60,10 +60,33 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add london_gigs_August2026.txt index.html gigs_seen.json version.json
-          if git diff --cached --quiet; then
-            echo "No gig changes — nothing to commit."
-          else
+
+          # Stage, commit, and push the regenerated files. Returns non-zero if
+          # the push is rejected (someone else pushed to main while we built).
+          commit_and_push() {
+            git add london_gigs_August2026.txt index.html gigs_seen.json version.json
+            if git diff --cached --quiet; then
+              echo "No gig changes — nothing to commit."
+              return 0
+            fi
             git commit -m "Refresh gigs ($(date -u '+%Y-%m-%d %H:%M UTC'))"
             git push
-          fi
+          }
+
+          # If main moved under us, adopt the latest main and rebuild the page on
+          # top of it (the page is fully generated, so this is conflict-free and
+          # also picks up any template changes), then retry the push.
+          for attempt in 1 2 3; do
+            if commit_and_push; then
+              exit 0
+            fi
+            echo "Push rejected (attempt $attempt) — rebuilding on latest main…"
+            cp london_gigs_August2026.txt "$RUNNER_TEMP/gigs.txt"  # keep fresh gig data
+            git fetch origin main
+            git reset --hard origin/main                            # discard our commit, adopt latest
+            cp "$RUNNER_TEMP/gigs.txt" london_gigs_August2026.txt
+            node build.mjs                                          # regenerate index.html, version.json, gigs_seen.json
+          done
+
+          echo "Could not push after 3 attempts." >&2
+          exit 1
