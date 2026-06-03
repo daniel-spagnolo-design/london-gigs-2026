@@ -398,7 +398,7 @@
 <body>
   <main class="wrap">
       <div class="banner banner--none" id="refresh-banner"
-           role="status" data-build="2026-06-03T01:52:00Z">
+           role="status" data-build="2026-06-03T01:59:00Z">
         <span class="banner__msg">No new gigs since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
@@ -424,7 +424,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-03T01:52:00Z">Wednesday Jun 3rd 2026, 1:52am</time> &middot; 27 matches</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-03T01:59:00Z">Wednesday Jun 3rd 2026, 1:59am</time> &middot; 27 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -944,7 +944,7 @@
     // foreground — and if the deployed build is newer we reload to a
     // cache-busting URL so the new HTML actually loads (no stale-cache loop).
     (function () {
-      var BUILD = "2026-06-03T01:52:00Z";
+      var BUILD = "2026-06-03T01:59:00Z";
       function check() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -968,7 +968,7 @@
     // itself once the workflow has committed the new gigs (~1-3 min later).
     (function () {
       var PROXY = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
-      var BUILD = "2026-06-03T01:52:00Z";
+      var BUILD = "2026-06-03T01:59:00Z";
       var btn = document.getElementById("refresh-btn");
       var fallback = document.getElementById("refresh-fallback");
       if (!btn) return;
