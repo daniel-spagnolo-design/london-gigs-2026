@@ -535,7 +535,10 @@ ${banner}
         <span class="l2">revisited 2026</span>
       </h1>
       <p class="hero__sub">Artists from my Spotify Liked Songs playing London this August. Tap through to grab a ticket.</p>
-      <a class="hero__refresh" href="${REFRESH_URL}" target="_blank" rel="noopener"
+      <!-- Hidden for now: gigs refresh automatically on a weekly schedule (see
+           .github/workflows/refresh-gigs.yml). Remove \`hidden\` to bring the
+           manual button back. -->
+      <a class="hero__refresh" hidden href="${REFRESH_URL}" target="_blank" rel="noopener"
          aria-label="Refresh gigs — opens the GitHub Actions run page">
         Refresh gigs <span aria-hidden="true">&rsaquo;</span>
       </a>
