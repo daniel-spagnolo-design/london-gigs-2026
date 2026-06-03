@@ -263,6 +263,7 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       display: block;
       color: var(--primary);
       font-size: clamp(56px, 13vw, 132px);
+      text-transform: uppercase;
     }
     .hero__title .l2 {
       display: block;
@@ -313,8 +314,8 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
     /* Spinning green ring shown only while searching. */
     .hero__spinner {
       display: none;
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       border: 2.5px solid rgba(159, 232, 112, 0.25);
       border-top-color: var(--primary);
