@@ -703,7 +703,10 @@ ${rows}
       // frame so the transition runs (the React "mounted" pattern, no library).
       b.dataset.state = "hidden";
       requestAnimationFrame(function () {
-        requestAnimationFrame(function () { b.dataset.state = "visible"; });
+        requestAnimationFrame(function () {
+          b.dataset.state = "visible";
+          syncTimer(); // begin the 4s auto-dismiss countdown
+        });
       });
 
       var leaving = false;
@@ -711,6 +714,7 @@ ${rows}
       function dismiss(dir) {
         if (leaving) return;
         leaving = true;
+        if (timerId != null) { clearTimeout(timerId); timerId = null; }
         try { localStorage.setItem(key, "1"); } catch (e) {}
         b.style.height = b.offsetHeight + "px"; // lock height so it can collapse
         void b.offsetHeight;                    // commit the start height
@@ -727,16 +731,50 @@ ${rows}
         setTimeout(finish, 600); // fallback if transitionend never fires
       }
 
+      // Auto-dismiss after Sonner's default 4000ms. We bank the remaining time
+      // and pause/resume on hover, focus, drag, and tab visibility — so the 4s
+      // counts only while the banner is actually visible and uninteracted with.
+      var DURATION = 4000, remaining = DURATION, timerStart = 0, timerId = null;
+      var hovered = false, focused = false, dragging = false;
+      function shouldRun() {
+        return !leaving && !hovered && !focused && !dragging &&
+          document.visibilityState === "visible";
+      }
+      function syncTimer() {
+        if (shouldRun()) {
+          if (timerId == null && remaining > 0) {
+            timerStart = Date.now();
+            timerId = setTimeout(function () { dismiss(0); }, remaining);
+          }
+        } else if (timerId != null) {
+          clearTimeout(timerId);
+          timerId = null;
+          remaining -= Date.now() - timerStart; // bank time already elapsed
+          if (remaining < 0) remaining = 0;
+        }
+      }
+
+      // Hover-pause only where hovering is real (desktop) — on touch a tap
+      // shouldn't freeze the countdown forever. Focus-pause aids keyboard users.
+      if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
+        b.addEventListener("mouseenter", function () { hovered = true; syncTimer(); });
+        b.addEventListener("mouseleave", function () { hovered = false; syncTimer(); });
+      }
+      b.addEventListener("focusin", function () { focused = true; syncTimer(); });
+      b.addEventListener("focusout", function () { focused = false; syncTimer(); });
+      document.addEventListener("visibilitychange", syncTimer);
+
       b.querySelector(".banner__close").addEventListener("click", function () {
         dismiss(0);
       });
 
       // Swipe-to-dismiss with momentum (Sonner): a quick flick (velocity > 0.11)
       // or a drag past ~25% of the width dismisses; otherwise it snaps back.
-      var startX = 0, startT = 0, dx = 0, dragging = false;
+      var startX = 0, startT = 0, dx = 0;
       b.addEventListener("pointerdown", function (e) {
         if (leaving || e.target.closest(".banner__close")) return;
         dragging = true; startX = e.clientX; startT = Date.now(); dx = 0;
+        syncTimer(); // pause the countdown while dragging
         b.style.transition = "none";
         try { b.setPointerCapture(e.pointerId); } catch (e2) {}
       });
@@ -756,6 +794,7 @@ ${rows}
           b.style.transition = "transform 250ms ease, opacity 250ms ease";
           b.style.transform = "";
           b.style.opacity = "";
+          syncTimer(); // resume the countdown after snapping back
         }
       }
       b.addEventListener("pointerup", endDrag);
