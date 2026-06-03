@@ -191,6 +191,39 @@
       font-size: 15px;
       font-weight: 700;
       box-shadow: 0 10px 24px -20px rgba(14, 15, 12, 0.6);
+      touch-action: pan-y;
+      /* Sonner-style motion: interruptible transitions (not keyframes), an
+         elegant ~400ms ease curve (not ease-out). Enter slides + fades in;
+         close and swipe fade while the height collapses so the list glides up. */
+      transition: transform 400ms ease, opacity 400ms ease,
+                  height 400ms ease, margin 400ms ease, padding 400ms ease;
+    }
+    /* Clip only while animating in/out, so the steady-state focus ring on the
+       close button isn't cropped. */
+    .banner[data-state="hidden"],
+    .banner[data-state="leaving"] { overflow: hidden; }
+    /* Enter-from state — flipped to "visible" on mount by the inline script. */
+    .banner[data-state="hidden"] {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    /* Leaving: fade + collapse the vertical space. Swipe layers an inline
+       translateX fling on top of this. */
+    .banner[data-state="leaving"] {
+      opacity: 0;
+      height: 0 !important;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      box-shadow: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .banner {
+        transition: opacity 250ms ease, height 250ms ease,
+                    margin 250ms ease, padding 250ms ease;
+      }
+      .banner[data-state="hidden"] { transform: none; }
     }
     .banner--new {
       background: var(--primary);
@@ -932,19 +965,87 @@
   </script>
 
   <script>
-    // Dismiss the refresh banner. The dismissal is remembered per build (keyed
-    // on the "Last updated" stamp), so a later refresh shows a fresh banner.
+    // Refresh banner: Sonner-style enter/exit. The dismissal is remembered per
+    // build (keyed on the "Last updated" stamp), so a later refresh shows a
+    // fresh banner. Close via the × button or by swiping the banner away.
     (function () {
       var b = document.getElementById("refresh-banner");
       if (!b) return;
-      var key = "lr2026-banner-dismissed:" + (b.dataset.build || "");
+      var build = b.dataset.build || "";
+      var key = "lr2026-banner-dismissed:" + build;
+      var seenKey = "lr2026-banner-seen:" + build;
+      // Show only on the first load of a given build. If it's already been
+      // dismissed OR seen once (e.g. a plain page reload), remove it silently —
+      // a later refresh makes a new build stamp, so the banner returns then.
       try {
-        if (localStorage.getItem(key)) { b.remove(); return; }
+        if (localStorage.getItem(key) || localStorage.getItem(seenKey)) {
+          b.remove();
+          return;
+        }
+        localStorage.setItem(seenKey, "1");
       } catch (e) {}
-      b.querySelector(".banner__close").addEventListener("click", function () {
-        try { localStorage.setItem(key, "1"); } catch (e) {}
-        b.remove();
+
+      // Animate in: start in the hidden state, then flip to visible on the next
+      // frame so the transition runs (the React "mounted" pattern, no library).
+      b.dataset.state = "hidden";
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { b.dataset.state = "visible"; });
       });
+
+      var leaving = false;
+      // dir: 0 = collapse straight up (button); ±1 = fling that way (swipe).
+      function dismiss(dir) {
+        if (leaving) return;
+        leaving = true;
+        try { localStorage.setItem(key, "1"); } catch (e) {}
+        b.style.height = b.offsetHeight + "px"; // lock height so it can collapse
+        void b.offsetHeight;                    // commit the start height
+        b.style.transition =
+          "transform 350ms ease, opacity 250ms ease, height 350ms ease," +
+          " margin 350ms ease, padding 350ms ease";
+        if (dir) b.style.transform = "translateX(" + (dir > 0 ? 120 : -120) + "%)";
+        b.dataset.state = "leaving";
+        var done = false;
+        function finish() { if (done) return; done = true; b.remove(); }
+        b.addEventListener("transitionend", function (e) {
+          if (e.target === b && e.propertyName === "height") finish();
+        });
+        setTimeout(finish, 600); // fallback if transitionend never fires
+      }
+
+      b.querySelector(".banner__close").addEventListener("click", function () {
+        dismiss(0);
+      });
+
+      // Swipe-to-dismiss with momentum (Sonner): a quick flick (velocity > 0.11)
+      // or a drag past ~25% of the width dismisses; otherwise it snaps back.
+      var startX = 0, startT = 0, dx = 0, dragging = false;
+      b.addEventListener("pointerdown", function (e) {
+        if (leaving || e.target.closest(".banner__close")) return;
+        dragging = true; startX = e.clientX; startT = Date.now(); dx = 0;
+        b.style.transition = "none";
+        try { b.setPointerCapture(e.pointerId); } catch (e2) {}
+      });
+      b.addEventListener("pointermove", function (e) {
+        if (!dragging) return;
+        dx = e.clientX - startX;
+        b.style.transform = "translateX(" + dx + "px)";
+        b.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 220));
+      });
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        var velocity = Math.abs(dx) / Math.max(1, Date.now() - startT);
+        if (Math.abs(dx) > b.offsetWidth * 0.25 || velocity > 0.11) {
+          dismiss(dx >= 0 ? 1 : -1);
+        } else {
+          b.style.transition = "transform 250ms ease, opacity 250ms ease";
+          b.style.transform = "";
+          b.style.opacity = "";
+        }
+      }
+      b.addEventListener("pointerup", endDrag);
+      b.addEventListener("pointercancel", endDrag);
     })();
   </script>
 
