@@ -120,8 +120,10 @@
       font-weight: 600;
       font-size: 15px;
       text-decoration: none;
-      transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+      transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease, transform 160ms ease-out;
     }
+    /* Press feedback — but not while searching (the button has morphed by then). */
+    .hero__refresh:not(.is-loading):active { transform: scale(0.97); }
     .hero__refresh:hover {
       border-color: var(--primary);
       background: rgba(159, 232, 112, 0.12);
@@ -140,12 +142,9 @@
       border-radius: 50%;
       border: 2.5px solid rgba(159, 232, 112, 0.25);
       border-top-color: var(--primary);
-      animation: hero-spin 0.8s linear infinite;
     }
     @keyframes hero-spin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) {
-      .hero__spinner { animation-duration: 1.8s; }
-    }
+    @keyframes hero-fade-in { from { opacity: 0; } to { opacity: 1; } }
     /* Loading state: morph the pill into just the spinner + "Searching…" copy. */
     .hero__refresh.is-loading {
       border-color: transparent;
@@ -154,8 +153,20 @@
       padding-left: 0;
     }
     .hero__refresh.is-loading:hover { background: transparent; }
-    .hero__refresh.is-loading .hero__spinner { display: inline-block; }
     .hero__refresh.is-loading .hero__chevron { display: none; }
+    /* Faster spin (feels faster) + a one-shot fade so it doesn't pop in. The
+       fade animates opacity only, so it won't fight the rotate transform. */
+    .hero__refresh.is-loading .hero__spinner {
+      display: inline-block;
+      animation: hero-spin 0.7s linear infinite, hero-fade-in 220ms ease-out;
+    }
+    /* Reduced motion: drop the rotation, keep an opacity pulse as the cue. */
+    @media (prefers-reduced-motion: reduce) {
+      .hero__refresh.is-loading .hero__spinner {
+        animation: hero-pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes hero-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    }
     .hero__fallback {
       display: block;
       margin-top: 12px;
