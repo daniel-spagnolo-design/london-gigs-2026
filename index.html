@@ -120,8 +120,6 @@
       text-decoration: none;
       transition: border-color 0.15s ease, background 0.15s ease;
     }
-    /* The `hidden` attribute must beat the explicit display above. */
-    .hero__refresh[hidden] { display: none; }
     .hero__refresh:hover {
       border-color: var(--primary);
       background: rgba(159, 232, 112, 0.12);
@@ -131,6 +129,8 @@
       outline-offset: 2px;
     }
     .hero__refresh span { color: var(--primary); }
+    /* The `hidden` attribute must beat the explicit display above. */
+    .hero__refresh[hidden] { display: none; }
 
     /* ---------- refresh banner ---------- */
     .banner {
@@ -894,6 +894,31 @@
       b.querySelector(".banner__close").addEventListener("click", function () {
         try { localStorage.setItem(key, "1"); } catch (e) {}
         b.remove();
+      });
+    })();
+  </script>
+
+  <script>
+    // Auto-update for the iOS home-screen app. Standalone web apps cache the
+    // HTML aggressively and often won't pick up a new deploy. This build's
+    // version is baked in below; we compare it against version.json — fetched
+    // fresh (cache-busted) on open and whenever the app returns to the
+    // foreground — and if the deployed build is newer we reload to a
+    // cache-busting URL so the new HTML actually loads (no stale-cache loop).
+    (function () {
+      var BUILD = "2026-06-02T06:30:00Z";
+      function check() {
+        fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) {
+            if (!v || !v.version || v.version === BUILD) return;
+            location.replace(location.pathname + "?v=" + encodeURIComponent(v.version));
+          })
+          .catch(function () {});
+      }
+      check();
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") check();
       });
     })();
   </script>

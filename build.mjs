@@ -16,6 +16,10 @@ const OUT = join(ROOT, "index.html");
 // Committed snapshot of the gig keys from the previous build, used to count how
 // many gigs are new since the last refresh (drives the dismissable banner).
 const STATE = join(ROOT, "gigs_seen.json");
+// Tiny file the page polls (cache-busted) to detect a newer deploy and reload
+// itself — needed because the iOS home-screen app caches the HTML hard. Holds
+// this build's "Last updated" stamp; see the auto-update script in renderPage.
+const VERSION = join(ROOT, "version.json");
 
 // "owner/repo" on GitHub — used to deep-link the page's "Refresh gigs" button
 // to the manual-trigger page of the refresh-gigs workflow. Set this to your repo.
@@ -602,6 +606,31 @@ ${rows}
       });
     })();
   </script>
+
+  <script>
+    // Auto-update for the iOS home-screen app. Standalone web apps cache the
+    // HTML aggressively and often won't pick up a new deploy. This build's
+    // version is baked in below; we compare it against version.json — fetched
+    // fresh (cache-busted) on open and whenever the app returns to the
+    // foreground — and if the deployed build is newer we reload to a
+    // cache-busting URL so the new HTML actually loads (no stale-cache loop).
+    (function () {
+      var BUILD = "${updatedIso}";
+      function check() {
+        fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) {
+            if (!v || !v.version || v.version === BUILD) return;
+            location.replace(location.pathname + "?v=" + encodeURIComponent(v.version));
+          })
+          .catch(function () {});
+      }
+      check();
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") check();
+      });
+    })();
+  </script>
 </body>
 </html>
 `;
@@ -636,5 +665,6 @@ const text = readFileSync(SOURCE, "utf8");
 const data = parseFeed(text);
 data.newCount = countNewGigs(data.gigs);
 writeFileSync(OUT, renderPage(data), "utf8");
+writeFileSync(VERSION, JSON.stringify({ version: data.updatedIso }) + "\n", "utf8");
 console.log(`Wrote ${OUT} — ${data.gigs.length} gigs (${data.newCount} new).`);
 for (const g of data.gigs) console.log(`  ${g.date} ${g.time}  ${g.artist}`);
