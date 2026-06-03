@@ -25,6 +25,11 @@ const VERSION = join(ROOT, "version.json");
 // to the manual-trigger page of the refresh-gigs workflow. Set this to your repo.
 const REPO = "daniel-spagnolo-design/london-gigs-2026";
 const REFRESH_URL = `https://github.com/${REPO}/actions/workflows/refresh-gigs.yml`;
+// Val.town endpoint that dispatches refresh-gigs.yml — it holds the GitHub token
+// server-side so the static page never exposes it. The "Refresh gigs" button
+// POSTs here. Leave empty to keep the button inert (page still works); see the
+// click-handler script in renderPage.
+const REFRESH_PROXY_URL = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
 
 // ---------- parse ----------
 
@@ -284,12 +289,14 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       padding: 11px 20px;
       border: 1.5px solid rgba(255, 255, 255, 0.35);
       border-radius: var(--r-pill);
+      background: transparent;
+      cursor: pointer;
       color: var(--canvas);
-      font-family: var(--sans);
+      font: inherit;
       font-weight: 600;
       font-size: 15px;
       text-decoration: none;
-      transition: border-color 0.15s ease, background 0.15s ease;
+      transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
     }
     .hero__refresh:hover {
       border-color: var(--primary);
@@ -299,9 +306,18 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       outline: 3px solid var(--primary);
       outline-offset: 2px;
     }
-    .hero__refresh span { color: var(--primary); }
-    /* The \`hidden\` attribute must beat the explicit display above. */
-    .hero__refresh[hidden] { display: none; }
+    .hero__refresh:disabled { opacity: 0.6; cursor: default; }
+    .hero__refresh > span[aria-hidden] { color: var(--primary); }
+    .hero__fallback {
+      display: block;
+      margin-top: 12px;
+      color: var(--canvas);
+      font-family: var(--sans);
+      font-size: 13px;
+      opacity: 0.75;
+      text-decoration: underline;
+    }
+    .hero__fallback[hidden] { display: none; }
 
     /* ---------- refresh banner ---------- */
     .banner {
@@ -541,13 +557,15 @@ ${banner}
         <span class="l2">revisited 2026</span>
       </h1>
       <p class="hero__sub">Artists from my Spotify Liked Songs playing London this August. Tap through to grab a ticket.</p>
-      <!-- Hidden for now: gigs refresh automatically on a weekly schedule (see
-           .github/workflows/refresh-gigs.yml). Remove \`hidden\` to bring the
-           manual button back. -->
-      <a class="hero__refresh" hidden href="${REFRESH_URL}" target="_blank" rel="noopener"
-         aria-label="Refresh gigs — opens the GitHub Actions run page">
-        Refresh gigs <span aria-hidden="true">&rsaquo;</span>
-      </a>
+      <!-- Fires refresh-gigs.yml in the background via the Val.town proxy (see
+           REFRESH_PROXY_URL and the click-handler script below). The fallback
+           link to the Actions page is revealed only if the trigger fails. -->
+      <button type="button" class="hero__refresh" id="refresh-btn">
+        <span class="refresh-label" aria-live="polite">Refresh gigs</span>
+        <span aria-hidden="true">&rsaquo;</span>
+      </button>
+      <a class="hero__fallback" id="refresh-fallback" hidden
+         href="${REFRESH_URL}" target="_blank" rel="noopener">Open Actions manually</a>
     </header>
 
     <section aria-labelledby="gigs-heading">
@@ -628,6 +646,69 @@ ${rows}
       check();
       document.addEventListener("visibilitychange", function () {
         if (document.visibilityState === "visible") check();
+      });
+    })();
+  </script>
+
+  <script>
+    // "Refresh gigs" button. POSTs to the Val.town proxy (which holds the GitHub
+    // token and dispatches refresh-gigs.yml), shows inline status, then polls
+    // version.json — same build-stamp the auto-updater uses — so the page reloads
+    // itself once the workflow has committed the new gigs (~1-3 min later).
+    (function () {
+      var PROXY = "${REFRESH_PROXY_URL}";
+      var BUILD = "${updatedIso}";
+      var btn = document.getElementById("refresh-btn");
+      var fallback = document.getElementById("refresh-fallback");
+      if (!btn) return;
+      var label = btn.querySelector(".refresh-label");
+      function setLabel(t) { if (label) label.textContent = t; }
+      // No proxy configured yet: keep the button inert rather than erroring.
+      if (!PROXY || PROXY.indexOf("PASTE_YOUR_VAL_URL") === 0) {
+        btn.disabled = true;
+        return;
+      }
+
+      var deadline = 0;
+      function poll() {
+        fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) {
+            if (v && v.version && v.version !== BUILD) {
+              location.replace(location.pathname + "?v=" + encodeURIComponent(v.version));
+              return;
+            }
+            if (Date.now() < deadline) { setTimeout(poll, 15000); return; }
+            setLabel("Still working — check back soon");
+            btn.disabled = false;
+          })
+          .catch(function () {
+            if (Date.now() < deadline) setTimeout(poll, 15000);
+          });
+      }
+
+      function fail() {
+        setLabel("Couldn't start — tap to retry");
+        btn.disabled = false;
+        if (fallback) fallback.hidden = false;
+      }
+
+      btn.addEventListener("click", function () {
+        btn.disabled = true;
+        if (fallback) fallback.hidden = true;
+        setLabel("Refreshing…");
+        fetch(PROXY, { method: "POST" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (d && d.ok) {
+              setLabel("Refresh started — new gigs appear shortly");
+              deadline = Date.now() + 4 * 60 * 1000;
+              setTimeout(poll, 15000);
+            } else {
+              fail();
+            }
+          })
+          .catch(fail);
       });
     })();
   </script>
