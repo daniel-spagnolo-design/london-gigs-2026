@@ -307,7 +307,31 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       outline-offset: 2px;
     }
     .hero__refresh:disabled { opacity: 0.6; cursor: default; }
-    .hero__refresh > span[aria-hidden] { color: var(--primary); }
+    .hero__chevron { color: var(--primary); }
+    /* Spinning green ring shown only while searching. */
+    .hero__spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(159, 232, 112, 0.25);
+      border-top-color: var(--primary);
+      animation: hero-spin 0.8s linear infinite;
+    }
+    @keyframes hero-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__spinner { animation-duration: 1.8s; }
+    }
+    /* Loading state: morph the pill into just the spinner + "Searching…" copy. */
+    .hero__refresh.is-loading {
+      border-color: transparent;
+      background: transparent;
+      cursor: default;
+      padding-left: 0;
+    }
+    .hero__refresh.is-loading:hover { background: transparent; }
+    .hero__refresh.is-loading .hero__spinner { display: inline-block; }
+    .hero__refresh.is-loading .hero__chevron { display: none; }
     .hero__fallback {
       display: block;
       margin-top: 12px;
@@ -561,8 +585,9 @@ ${banner}
            REFRESH_PROXY_URL and the click-handler script below). The fallback
            link to the Actions page is revealed only if the trigger fails. -->
       <button type="button" class="hero__refresh" id="refresh-btn">
+        <span class="hero__spinner" aria-hidden="true"></span>
         <span class="refresh-label" aria-live="polite">Refresh gigs</span>
-        <span aria-hidden="true">&rsaquo;</span>
+        <span class="hero__chevron" aria-hidden="true">&rsaquo;</span>
       </button>
       <a class="hero__fallback" id="refresh-fallback" hidden
          href="${REFRESH_URL}" target="_blank" rel="noopener">Open Actions manually</a>
@@ -669,7 +694,20 @@ ${rows}
         return;
       }
 
-      var deadline = 0;
+      var busy = false, deadline = 0;
+      function startLoading() {
+        busy = true;
+        btn.classList.add("is-loading");
+        btn.setAttribute("aria-busy", "true");
+        if (fallback) fallback.hidden = true;
+        setLabel("Searching (may take 30 seconds)");
+      }
+      function stopLoading() {
+        busy = false;
+        btn.classList.remove("is-loading");
+        btn.removeAttribute("aria-busy");
+      }
+
       function poll() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -679,8 +717,8 @@ ${rows}
               return;
             }
             if (Date.now() < deadline) { setTimeout(poll, 15000); return; }
+            stopLoading();
             setLabel("Still working — check back soon");
-            btn.disabled = false;
           })
           .catch(function () {
             if (Date.now() < deadline) setTimeout(poll, 15000);
@@ -688,20 +726,20 @@ ${rows}
       }
 
       function fail() {
+        stopLoading();
         setLabel("Couldn't start — tap to retry");
-        btn.disabled = false;
         if (fallback) fallback.hidden = false;
       }
 
       btn.addEventListener("click", function () {
-        btn.disabled = true;
-        if (fallback) fallback.hidden = true;
-        setLabel("Refreshing…");
+        if (busy) return;
+        startLoading();
+        // Keep the spinner + "Searching…" copy running through both the dispatch
+        // and the version.json poll, until the new gigs land and we reload.
         fetch(PROXY, { method: "POST" })
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (d) {
             if (d && d.ok) {
-              setLabel("Refresh started — new gigs appear shortly");
               deadline = Date.now() + 4 * 60 * 1000;
               setTimeout(poll, 15000);
             } else {
