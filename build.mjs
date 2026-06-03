@@ -296,6 +296,8 @@ function renderPage({ gigs, updatedIso, newCount = 0 }) {
       outline-offset: 2px;
     }
     .hero__refresh span { color: var(--primary); }
+    /* The \`hidden\` attribute must beat the explicit display above. */
+    .hero__refresh[hidden] { display: none; }
 
     /* ---------- refresh banner ---------- */
     .banner {

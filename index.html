@@ -120,6 +120,8 @@
       text-decoration: none;
       transition: border-color 0.15s ease, background 0.15s ease;
     }
+    /* The `hidden` attribute must beat the explicit display above. */
+    .hero__refresh[hidden] { display: none; }
     .hero__refresh:hover {
       border-color: var(--primary);
       background: rgba(159, 232, 112, 0.12);
