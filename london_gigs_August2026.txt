@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-06-15 12:27  (28 matches)
+Last updated: 2026-06-20 13:00  (29 matches)
 ============================================================
 
 2026-08-01  14:00
@@ -48,7 +48,7 @@ Tickets: https://ra.co/events/2307748
 ------------------------------------------------------------
 2026-08-07  22:00
 Artist : Session Victim
-Event  : Palais: Session Victim (Extended Set)
+Event  : Palais: Session Victim (All Night Long)
 Venue  : Palais
 Source : Resident Advisor
 Tickets: https://ra.co/events/2431588
@@ -130,19 +130,19 @@ Venue  : Dullingham Polo Club
 Source : Resident Advisor
 Tickets: https://ra.co/events/2443971
 ------------------------------------------------------------
+2026-08-23  13:00
+Artist : TWO LANES
+Event  : Christian Löffler presents 'Until We Meet Again'
+Venue  : The Cause
+Source : Resident Advisor
+Tickets: https://ra.co/events/2419530
+------------------------------------------------------------
 2026-08-29  12:00
 Artist : Blood Orange
 Event  : RALLY 2026
 Venue  : Southwark Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2298367
-------------------------------------------------------------
-2026-08-29  12:00
-Artist : Crazy P
-Event  : Appetite On The Farm 2026 - Bank Holiday
-Venue  : Kelvedon Hall
-Source : Resident Advisor
-Tickets: https://ra.co/events/2311488
 ------------------------------------------------------------
 2026-08-29  12:00
 Artist : Roman Flügel
@@ -178,6 +178,13 @@ Event  : Eric Luttrell - Summer Of Love Tour 2026 - London
 Venue  : Riverside East
 Source : Ticketmaster
 Tickets: https://www.universe.com/events/eric-luttrell-summer-of-love-tour-2026-london-tickets-L367MT?ref=ticketmaster
+------------------------------------------------------------
+2026-08-30  12:00
+Artist : Horse Meat Disco
+Event  : Body Movements Festival 2026
+Venue  : Southwark Park
+Source : Resident Advisor
+Tickets: https://ra.co/events/2242541
 ------------------------------------------------------------
 2026-08-31  19:00
 Artist : Earl Sweatshirt

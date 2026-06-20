@@ -442,13 +442,13 @@
 </head>
 <body>
   <main class="wrap">
-      <div class="banner banner--none" id="refresh-banner"
-           role="status" data-build="2026-06-15T12:27:00Z">
-        <span class="banner__msg">No new gigs since your last refresh</span>
+      <div class="banner banner--new" id="refresh-banner"
+           role="status" data-build="2026-06-20T13:00:00Z">
+        <span class="banner__msg">2 new gigs found since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
     <header class="hero">
-      <span class="hero__badge">Aug 2026 &middot; 28 gigs</span>
+      <span class="hero__badge">Aug 2026 &middot; 29 gigs</span>
       <h1 class="hero__title">
         <span class="l1">London</span>
         <span class="l2">revisited 2026</span>
@@ -469,7 +469,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-15T12:27:00Z">Monday Jun 15th 2026, 12:27pm</time> &middot; 28 matches</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-20T13:00:00Z">Saturday Jun 20th 2026, 1pm</time> &middot; 29 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -581,7 +581,7 @@
         </div>
         <div class="gig__info">
           <h3 class="gig__artist">Session Victim</h3>
-          <p class="gig__event">Palais: Session Victim (Extended Set)</p>
+          <p class="gig__event">Palais: Session Victim (All Night Long)</p>
           <p class="gig__meta">
             <span class="gig__when">Fri 7 Aug &middot; 10pm</span>
             <span class="gig__dot" aria-hidden="true">&middot;</span>
@@ -780,6 +780,23 @@
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">23</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">TWO LANES</h3>
+          <p class="gig__event">Christian Löffler presents &#39;Until We Meet Again&#39;</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 23 Aug &middot; 1pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">The Cause</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2419530" target="_blank" rel="noopener"
+           aria-label="Buy tickets for TWO LANES">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
           <span class="gig__day">29</span>
           <span class="gig__mon">Aug</span>
         </div>
@@ -794,23 +811,6 @@
         </div>
         <a class="tickets" href="https://ra.co/events/2298367" target="_blank" rel="noopener"
            aria-label="Buy tickets for Blood Orange">Tickets <span aria-hidden="true">&rsaquo;</span></a>
-      </li>
-      <li class="gig">
-        <div class="gig__date" aria-hidden="true">
-          <span class="gig__day">29</span>
-          <span class="gig__mon">Aug</span>
-        </div>
-        <div class="gig__info">
-          <h3 class="gig__artist">Crazy P</h3>
-          <p class="gig__event">Appetite On The Farm 2026 - Bank Holiday</p>
-          <p class="gig__meta">
-            <span class="gig__when">Sat 29 Aug &middot; 12pm</span>
-            <span class="gig__dot" aria-hidden="true">&middot;</span>
-            <span class="gig__venue">Kelvedon Hall</span>
-          </p>
-        </div>
-        <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
-           aria-label="Buy tickets for Crazy P">Tickets <span aria-hidden="true">&rsaquo;</span></a>
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
@@ -879,6 +879,23 @@
         </div>
         <a class="tickets" href="https://ra.co/events/2311488" target="_blank" rel="noopener"
            aria-label="Buy tickets for Todd Edwards">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">30</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Horse Meat Disco</h3>
+          <p class="gig__event">Body Movements Festival 2026</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sun 30 Aug &middot; 12pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Southwark Park</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2242541" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Horse Meat Disco">Tickets <span aria-hidden="true">&rsaquo;</span></a>
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
@@ -1113,7 +1130,7 @@
     // foreground — and if the deployed build is newer we reload to a
     // cache-busting URL so the new HTML actually loads (no stale-cache loop).
     (function () {
-      var BUILD = "2026-06-15T12:27:00Z";
+      var BUILD = "2026-06-20T13:00:00Z";
       function check() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -1137,7 +1154,7 @@
     // itself once the workflow has committed the new gigs (~1-3 min later).
     (function () {
       var PROXY = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
-      var BUILD = "2026-06-15T12:27:00Z";
+      var BUILD = "2026-06-20T13:00:00Z";
       var btn = document.getElementById("refresh-btn");
       var fallback = document.getElementById("refresh-fallback");
       if (!btn) return;
