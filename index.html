@@ -442,9 +442,9 @@
 </head>
 <body>
   <main class="wrap">
-      <div class="banner banner--new" id="refresh-banner"
-           role="status" data-build="2026-06-20T13:00:00Z">
-        <span class="banner__msg">2 new gigs found since your last refresh</span>
+      <div class="banner banner--none" id="refresh-banner"
+           role="status" data-build="2026-06-22T12:14:00Z">
+        <span class="banner__msg">No new gigs since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
     <header class="hero">
@@ -469,7 +469,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-20T13:00:00Z">Saturday Jun 20th 2026, 1pm</time> &middot; 29 matches</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-06-22T12:14:00Z">Monday Jun 22nd 2026, 12:14pm</time> &middot; 29 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -1130,7 +1130,7 @@
     // foreground — and if the deployed build is newer we reload to a
     // cache-busting URL so the new HTML actually loads (no stale-cache loop).
     (function () {
-      var BUILD = "2026-06-20T13:00:00Z";
+      var BUILD = "2026-06-22T12:14:00Z";
       function check() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -1154,7 +1154,7 @@
     // itself once the workflow has committed the new gigs (~1-3 min later).
     (function () {
       var PROXY = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
-      var BUILD = "2026-06-20T13:00:00Z";
+      var BUILD = "2026-06-22T12:14:00Z";
       var btn = document.getElementById("refresh-btn");
       var fallback = document.getElementById("refresh-fallback");
       if (!btn) return;
