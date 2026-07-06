@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-06-29 11:10  (31 matches)
+Last updated: 2026-07-06 10:48  (34 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -102,6 +102,20 @@ Venue  : Burgess Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2352117
 ------------------------------------------------------------
+2026-08-16  14:30
+Artist : Qendresa
+Event  : Soulection Experience: 15 Year Anniversary
+Venue  : Magazine Open-Air, London
+Source : Ticketmaster
+Tickets: https://www.ticketmaster.co.uk/soulection-experience-15-year-anniversary-london-16-08-2026/event/1F00644CB38C352C
+------------------------------------------------------------
+2026-08-16  14:30
+Artist : Sango
+Event  : Soulection Experience: 15 Year Anniversary
+Venue  : Magazine Open-Air, London
+Source : Ticketmaster
+Tickets: https://www.ticketmaster.co.uk/soulection-experience-15-year-anniversary-london-16-08-2026/event/1F00644CB38C352C
+------------------------------------------------------------
 2026-08-19  19:30
 Artist : Blue Lab Beats
 Event  : Digable Planets
@@ -122,6 +136,13 @@ Event  : Purple Disco Machine with Flight Facilities, Jayda G, david bay
 Venue  : Magazine Open–Air
 Source : Resident Advisor
 Tickets: https://ra.co/events/2373989
+------------------------------------------------------------
+2026-08-22  23:00
+Artist : Fort Romeau
+Event  : Broadwick Live presents: Flight Facilities, Kirollus, Jennifer Loveless, Fort Romeau + more
+Venue  : fabric
+Source : Resident Advisor
+Tickets: https://ra.co/events/2454567
 ------------------------------------------------------------
 2026-08-22  14:00
 Artist : Oklou
