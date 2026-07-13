@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-07-06 10:48  (34 matches)
+Last updated: 2026-07-13 09:37  (37 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -81,6 +81,13 @@ Venue  : Burgess Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2236226
 ------------------------------------------------------------
+2026-08-08  18:00
+Artist : Tyde
+Event  : Tyde: Live in London
+Venue  : The Lower Third
+Source : DICE
+Tickets: https://dice.fm/event/2w56np-tyde-live-in-london-8th-aug-the-lower-third-london-tickets
+------------------------------------------------------------
 2026-08-09  13:30
 Artist : Adam Port
 Event  : krankbrother presents: Adam Port + &ME
@@ -101,6 +108,20 @@ Event  : Eastern Electrics 2026
 Venue  : Burgess Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2352117
+------------------------------------------------------------
+2026-08-12  19:00
+Artist : Nao
+Event  : Nao
+Venue  : Night Tales Loft
+Source : Ticketmaster
+Tickets: https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242954?REFERRAL_ID=tmfeed
+------------------------------------------------------------
+2026-08-13  19:00
+Artist : Nao
+Event  : Nao
+Venue  : Night Tales Loft
+Source : Ticketmaster
+Tickets: https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242934?REFERRAL_ID=tmfeed
 ------------------------------------------------------------
 2026-08-16  14:30
 Artist : Qendresa

@@ -443,12 +443,12 @@
 <body>
   <main class="wrap">
       <div class="banner banner--new" id="refresh-banner"
-           role="status" data-build="2026-07-06T10:48:00Z">
+           role="status" data-build="2026-07-13T09:37:00Z">
         <span class="banner__msg">3 new gigs found since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
     <header class="hero">
-      <span class="hero__badge">Aug 2026 &middot; 34 gigs</span>
+      <span class="hero__badge">Aug 2026 &middot; 37 gigs</span>
       <h1 class="hero__title">
         <span class="l1">London</span>
         <span class="l2">revisited 2026</span>
@@ -469,7 +469,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated <time id="updated-time" datetime="2026-07-06T10:48:00Z">Monday Jul 6th 2026, 10:48am</time> &middot; 34 matches</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-07-13T09:37:00Z">Monday Jul 13th 2026, 9:37am</time> &middot; 37 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -661,6 +661,23 @@
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">8</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Tyde</h3>
+          <p class="gig__event">Tyde: Live in London</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 8 Aug &middot; 6pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">The Lower Third</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://dice.fm/event/2w56np-tyde-live-in-london-8th-aug-the-lower-third-london-tickets" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Tyde">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
           <span class="gig__day">9</span>
           <span class="gig__mon">Aug</span>
         </div>
@@ -709,6 +726,40 @@
         </div>
         <a class="tickets" href="https://ra.co/events/2315321" target="_blank" rel="noopener"
            aria-label="Buy tickets for Adam Port">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">12</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Nao</h3>
+          <p class="gig__event">Nao</p>
+          <p class="gig__meta">
+            <span class="gig__when">Wed 12 Aug &middot; 7pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Night Tales Loft</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242954?REFERRAL_ID=tmfeed" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Nao">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">13</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">Nao</h3>
+          <p class="gig__event">Nao</p>
+          <p class="gig__meta">
+            <span class="gig__when">Thu 13 Aug &middot; 7pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Night Tales Loft</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242934?REFERRAL_ID=tmfeed" target="_blank" rel="noopener"
+           aria-label="Buy tickets for Nao">Tickets <span aria-hidden="true">&rsaquo;</span></a>
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
@@ -1215,7 +1266,7 @@
     // foreground — and if the deployed build is newer we reload to a
     // cache-busting URL so the new HTML actually loads (no stale-cache loop).
     (function () {
-      var BUILD = "2026-07-06T10:48:00Z";
+      var BUILD = "2026-07-13T09:37:00Z";
       function check() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -1239,7 +1290,7 @@
     // itself once the workflow has committed the new gigs (~1-3 min later).
     (function () {
       var PROXY = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
-      var BUILD = "2026-07-06T10:48:00Z";
+      var BUILD = "2026-07-13T09:37:00Z";
       var btn = document.getElementById("refresh-btn");
       var fallback = document.getElementById("refresh-fallback");
       if (!btn) return;
