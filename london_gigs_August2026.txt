@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-07-20 09:24  (37 matches)
+Last updated: 2026-07-22 17:16  (37 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -195,14 +195,14 @@ Tickets: https://ra.co/events/2443593
 ------------------------------------------------------------
 2026-08-29  12:00
 Artist : Blood Orange
-Event  : RALLY 2026
+Event  : RALLY 2026 [sold out]
 Venue  : Southwark Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2298367
 ------------------------------------------------------------
 2026-08-29  12:00
 Artist : Roman Flügel
-Event  : RALLY 2026
+Event  : RALLY 2026 [sold out]
 Venue  : Southwark Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2298367
