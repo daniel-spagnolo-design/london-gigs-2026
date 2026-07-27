@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-07-22 17:16  (37 matches)
+Last updated: 2026-07-27 10:01  (38 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -24,6 +24,13 @@ Event  : Innervisions LONDON
 Venue  : Boston Manor Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2373267
+------------------------------------------------------------
+2026-08-01  14:00
+Artist : SG Lewis
+Event  : Dom Dolla on the Thames
+Venue  : Old Royal Naval College
+Source : Resident Advisor
+Tickets: https://ra.co/events/2353104
 ------------------------------------------------------------
 2026-08-01  12:00
 Artist : TDJ

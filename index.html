@@ -442,13 +442,13 @@
 </head>
 <body>
   <main class="wrap">
-      <div class="banner banner--none" id="refresh-banner"
-           role="status" data-build="2026-07-22T17:16:00Z">
-        <span class="banner__msg">No new gigs since your last refresh</span>
+      <div class="banner banner--new" id="refresh-banner"
+           role="status" data-build="2026-07-27T10:01:00Z">
+        <span class="banner__msg">1 new gig found since your last refresh</span>
         <button class="banner__close" type="button" aria-label="Dismiss this message">&times;</button>
       </div>
     <header class="hero">
-      <span class="hero__badge">Aug 2026 &middot; 37 gigs</span>
+      <span class="hero__badge">Aug 2026 &middot; 38 gigs</span>
       <h1 class="hero__title">
         <span class="l1">London</span>
         <span class="l2">revisited 2026</span>
@@ -469,7 +469,7 @@
     <section aria-labelledby="gigs-heading">
       <div class="section-head">
         <h2 id="gigs-heading">Aug 2026 gigs</h2>
-        <p class="caption">Last updated <time id="updated-time" datetime="2026-07-22T17:16:00Z">Wednesday Jul 22nd 2026, 5:16pm</time> &middot; 37 matches</p>
+        <p class="caption">Last updated <time id="updated-time" datetime="2026-07-27T10:01:00Z">Monday Jul 27th 2026, 10:01am</time> &middot; 38 matches</p>
       </div>
       <ul class="gigs">
       <li class="gig">
@@ -539,6 +539,23 @@
         </div>
         <a class="tickets" href="https://ra.co/events/2373267" target="_blank" rel="noopener"
            aria-label="Buy tickets for RY X">Tickets <span aria-hidden="true">&rsaquo;</span></a>
+      </li>
+      <li class="gig">
+        <div class="gig__date" aria-hidden="true">
+          <span class="gig__day">1</span>
+          <span class="gig__mon">Aug</span>
+        </div>
+        <div class="gig__info">
+          <h3 class="gig__artist">SG Lewis</h3>
+          <p class="gig__event">Dom Dolla on the Thames</p>
+          <p class="gig__meta">
+            <span class="gig__when">Sat 1 Aug &middot; 2pm</span>
+            <span class="gig__dot" aria-hidden="true">&middot;</span>
+            <span class="gig__venue">Old Royal Naval College</span>
+          </p>
+        </div>
+        <a class="tickets" href="https://ra.co/events/2353104" target="_blank" rel="noopener"
+           aria-label="Buy tickets for SG Lewis">Tickets <span aria-hidden="true">&rsaquo;</span></a>
       </li>
       <li class="gig">
         <div class="gig__date" aria-hidden="true">
@@ -1266,7 +1283,7 @@
     // foreground — and if the deployed build is newer we reload to a
     // cache-busting URL so the new HTML actually loads (no stale-cache loop).
     (function () {
-      var BUILD = "2026-07-22T17:16:00Z";
+      var BUILD = "2026-07-27T10:01:00Z";
       function check() {
         fetch("version.json?t=" + Date.now(), { cache: "no-store" })
           .then(function (r) { return r.ok ? r.json() : null; })
@@ -1290,7 +1307,7 @@
     // itself once the workflow has committed the new gigs (~1-3 min later).
     (function () {
       var PROXY = "https://dspag--f320650c5eec11f1a2951607ee4eb77e.web.val.run";
-      var BUILD = "2026-07-22T17:16:00Z";
+      var BUILD = "2026-07-27T10:01:00Z";
       var btn = document.getElementById("refresh-btn");
       var fallback = document.getElementById("refresh-fallback");
       if (!btn) return;
