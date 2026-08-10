@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-08-03 09:55  (43 matches)
+Last updated: 2026-08-10 07:50  (45 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -95,13 +95,6 @@ Venue  : Burgess Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2236226
 ------------------------------------------------------------
-2026-08-08  18:00
-Artist : Tyde
-Event  : Tyde: Live in London
-Venue  : The Lower Third
-Source : DICE
-Tickets: https://dice.fm/event/2w56np-tyde-live-in-london-8th-aug-the-lower-third-london-tickets
-------------------------------------------------------------
 2026-08-09  13:30
 Artist : Adam Port
 Event  : krankbrother presents: Adam Port + &ME
@@ -143,6 +136,13 @@ Event  : Nao
 Venue  : Night Tales Loft
 Source : Ticketmaster
 Tickets: https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242934?REFERRAL_ID=tmfeed
+------------------------------------------------------------
+2026-08-15  12:00
+Artist : Skin On Skin
+Event  : Maiden Voyage
+Venue  : Burgess Park
+Source : Resident Advisor
+Tickets: https://ra.co/events/2508430
 ------------------------------------------------------------
 2026-08-16  20:00
 Artist : Horse Meat Disco
@@ -207,6 +207,13 @@ Venue  : Victoria Park London
 Source : Ticketmaster
 Tickets: https://www.ticketmaster.co.uk/all-points-east-lorde-london-22-08-2026/event/37006364B4B15CA1
 ------------------------------------------------------------
+2026-08-22  15:00
+Artist : Radioactive Man
+Event  : Dinamplatz with Rrose, Random Factor, Kerrie, Equinox & Nik Colk Void 
+Venue  : The Glove That Fits
+Source : Resident Advisor
+Tickets: https://ra.co/events/2475255
+------------------------------------------------------------
 2026-08-22  12:00
 Artist : Skream
 Event  : Hifields 2026
@@ -221,7 +228,7 @@ Venue  : The Eagle
 Source : Resident Advisor
 Tickets: https://ra.co/events/2499585
 ------------------------------------------------------------
-2026-08-23  13:00
+2026-08-23  15:00
 Artist : TWO LANES
 Event  : Christian Löffler presents 'Until We Meet Again'
 Venue  : The Cause
@@ -241,6 +248,13 @@ Event  : RALLY 2026 [sold out]
 Venue  : Southwark Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2298367
+------------------------------------------------------------
+2026-08-29  23:00
+Artist : Emma-Jean Thackray
+Event  : Movementt with Emma-Jean Thackray & Mr Redley
+Venue  : The Carpet Shop
+Source : Resident Advisor
+Tickets: https://ra.co/events/2503944
 ------------------------------------------------------------
 2026-08-29  12:00
 Artist : Roman Flügel
