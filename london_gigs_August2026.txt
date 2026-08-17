@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-08-10 07:50  (45 matches)
+Last updated: 2026-08-17 07:04  (41 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -123,27 +123,6 @@ Venue  : Burgess Park
 Source : Resident Advisor
 Tickets: https://ra.co/events/2352117
 ------------------------------------------------------------
-2026-08-12  19:00
-Artist : Nao
-Event  : Nao
-Venue  : Night Tales Loft
-Source : Ticketmaster
-Tickets: https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242954?REFERRAL_ID=tmfeed
-------------------------------------------------------------
-2026-08-13  19:00
-Artist : Nao
-Event  : Nao
-Venue  : Night Tales Loft
-Source : Ticketmaster
-Tickets: https://www.ticketweb.uk/event/nao-night-tales-loft-tickets/14242934?REFERRAL_ID=tmfeed
-------------------------------------------------------------
-2026-08-15  12:00
-Artist : Skin On Skin
-Event  : Maiden Voyage
-Venue  : Burgess Park
-Source : Resident Advisor
-Tickets: https://ra.co/events/2508430
-------------------------------------------------------------
 2026-08-16  20:00
 Artist : Horse Meat Disco
 Event  : Horse Meat Disco at Eagle London
@@ -151,19 +130,12 @@ Venue  : The Eagle
 Source : Resident Advisor
 Tickets: https://ra.co/events/2499581
 ------------------------------------------------------------
-2026-08-16  14:30
+2026-08-16  13:30
 Artist : Qendresa
-Event  : Soulection Experience: 15 Year Anniversary
-Venue  : Magazine Open-Air, London
-Source : Ticketmaster
-Tickets: https://www.ticketmaster.co.uk/soulection-experience-15-year-anniversary-london-16-08-2026/event/1F00644CB38C352C
-------------------------------------------------------------
-2026-08-16  14:30
-Artist : Sango
-Event  : Soulection Experience: 15 Year Anniversary
-Venue  : Magazine Open-Air, London
-Source : Ticketmaster
-Tickets: https://www.ticketmaster.co.uk/soulection-experience-15-year-anniversary-london-16-08-2026/event/1F00644CB38C352C
+Event  : 15 years: The Soulection Experience
+Venue  : Magazine Open–Air
+Source : Resident Advisor
+Tickets: https://ra.co/events/2367066
 ------------------------------------------------------------
 2026-08-19  19:30
 Artist : Blue Lab Beats
