@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-08-17 07:04  (41 matches)
+Last updated: 2026-08-24 07:07  (37 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -137,27 +137,6 @@ Venue  : Magazine Open–Air
 Source : Resident Advisor
 Tickets: https://ra.co/events/2367066
 ------------------------------------------------------------
-2026-08-19  19:30
-Artist : Blue Lab Beats
-Event  : Digable Planets
-Venue  : Scala
-Source : Ticketmaster
-Tickets: https://www.universe.com/events/digable-planets-tickets-RLMNV6?ref=ticketmaster
-------------------------------------------------------------
-2026-08-20  19:00
-Artist : Fabiana Palladino
-Event  : Fabiana Palladino
-Venue  : The Horse Hospital
-Source : DICE
-Tickets: https://dice.fm/event/mxn6ar-fabiana-palladino-20th-aug-the-horse-hospital-london-tickets
-------------------------------------------------------------
-2026-08-22  14:00
-Artist : Fabiana Palladino
-Event  : All Points East - Lorde
-Venue  : Victoria Park London
-Source : Ticketmaster
-Tickets: https://www.ticketmaster.co.uk/all-points-east-lorde-london-22-08-2026/event/37006364B4B15CA1
-------------------------------------------------------------
 2026-08-22  14:30
 Artist : Flight Facilities
 Event  : Purple Disco Machine with Flight Facilities, Jayda G, david bay
@@ -171,13 +150,6 @@ Event  : Broadwick Live presents: Flight Facilities, Kirollus, Jennifer Loveless
 Venue  : fabric
 Source : Resident Advisor
 Tickets: https://ra.co/events/2454567
-------------------------------------------------------------
-2026-08-22  14:00
-Artist : Oklou
-Event  : All Points East - Lorde
-Venue  : Victoria Park London
-Source : Ticketmaster
-Tickets: https://www.ticketmaster.co.uk/all-points-east-lorde-london-22-08-2026/event/37006364B4B15CA1
 ------------------------------------------------------------
 2026-08-22  15:00
 Artist : Radioactive Man
@@ -272,10 +244,10 @@ Tickets: https://ra.co/events/2242541
 ------------------------------------------------------------
 2026-08-31  19:00
 Artist : Earl Sweatshirt
-Event  : Earl Sweatshirt & MIKE - Home on the Range Tour 2026
-Venue  : O2 Forum Kentish Town
-Source : Ticketmaster
-Tickets: https://www.ticketmaster.co.uk/earl-sweatshirt-mike-home-on-the-london-31-08-2026/event/3E006466F3688E5B
+Event  : Earl Sweatshirt & MIKE
+Venue  : EartH
+Source : DICE
+Tickets: https://dice.fm/event/eo6n2o-earl-sweatshirt-mike-31st-aug-earth-london-tickets
 ------------------------------------------------------------
 2026-08-31  14:00
 Artist : Folamour
