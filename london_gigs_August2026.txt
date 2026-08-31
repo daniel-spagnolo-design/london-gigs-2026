@@ -1,7 +1,7 @@
 LONDON GIGS — AUGUST 2026
 Artists from your Spotify Liked Songs playing in London
 Sources: Ticketmaster + Resident Advisor + DICE (confirmed)
-Last updated: 2026-08-24 07:07  (37 matches)
+Last updated: 2026-08-31 13:13  (36 matches)
 ============================================================
 
 2026-08-01  13:00
@@ -195,10 +195,17 @@ Tickets: https://ra.co/events/2298367
 ------------------------------------------------------------
 2026-08-29  23:00
 Artist : Emma-Jean Thackray
-Event  : Movementt with Emma-Jean Thackray & Mr Redley
+Event  : Emma-Jean Thackray & Mr Redley - Movementt
 Venue  : The Carpet Shop
 Source : Resident Advisor
 Tickets: https://ra.co/events/2503944
+------------------------------------------------------------
+2026-08-29  22:30
+Artist : Joe Turner
+Event  : Select Radio: Dimmish, Ryan Resso, Evie + more
+Venue  : Ministry Of Sound
+Source : Resident Advisor
+Tickets: https://ra.co/events/2471475
 ------------------------------------------------------------
 2026-08-29  12:00
 Artist : Roman Flügel
@@ -228,13 +235,6 @@ Venue  : Kelvedon Hall
 Source : Resident Advisor
 Tickets: https://ra.co/events/2311488
 ------------------------------------------------------------
-2026-08-30  15:00
-Artist : Eric Luttrell
-Event  : Eric Luttrell - Summer Of Love Tour 2026 - London
-Venue  : Riverside East
-Source : Ticketmaster
-Tickets: https://www.universe.com/events/eric-luttrell-summer-of-love-tour-2026-london-tickets-L367MT?ref=ticketmaster
-------------------------------------------------------------
 2026-08-30  12:00
 Artist : Horse Meat Disco
 Event  : Body Movements Festival 2026
@@ -244,17 +244,10 @@ Tickets: https://ra.co/events/2242541
 ------------------------------------------------------------
 2026-08-31  19:00
 Artist : Earl Sweatshirt
-Event  : Earl Sweatshirt & MIKE
+Event  : Earl Sweatshirt & MIKE - Home on the Range Tour 2026
 Venue  : EartH
-Source : DICE
-Tickets: https://dice.fm/event/eo6n2o-earl-sweatshirt-mike-31st-aug-earth-london-tickets
-------------------------------------------------------------
-2026-08-31  14:00
-Artist : Folamour
-Event  : LIDO – Maribou State
-Venue  : Victoria Park
-Source : DICE
-Tickets: https://dice.fm/event/av79ld-lido-maribou-state-31st-aug-victoria-park-london-tickets
+Source : Ticketmaster
+Tickets: https://www.ticketmaster.co.uk/earl-sweatshirt-mike-home-on-the-london-31-08-2026/event/35006519DF4D894D
 ------------------------------------------------------------
 2026-08-31  14:00
 Artist : Maribou State
